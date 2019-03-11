@@ -12,8 +12,10 @@
     source_ip: 'any'
     destination_zone: 'untrust'
     destination_ip: 'any'
-    application: 'any'
-    service: 'application-default'
+    application:
+      - 'any'
+    service:
+      - 'application-default'
 
   module_defaults:
     panos_security_rule:
@@ -26,11 +28,11 @@
     - name: Create security rule via extra_vars
       panos_security_rule:
         rule_name: '{{ rule_name }}'
-        source_zone: ['{{ source_zone }}']
-        destination_zone: ['{{ destination_zone }}']
-        source_ip: ['{{ source_ip }}']
-        destination_ip: ['{{ destination_ip }}']
+        source_zone: '{{ source_zone }}'
+        destination_zone: '{{ destination_zone }}'
+        source_ip: '{{ source_ip }}'
+        destination_ip: '{{ destination_ip }}'
         application: '{{ application }}'
-        service: ['{{ service }}']
+        service: '{{ service }}'
         action: 'allow'
         tag_name: '{{ tag|default([]) }}'
