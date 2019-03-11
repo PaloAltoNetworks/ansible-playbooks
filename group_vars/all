@@ -1,0 +1,5 @@
+# Set so that Ansible will execute the virtualenv Python instead of the system
+# Python for 'connection: local' module calls.
+#
+# See http://willthames.github.io/2018/07/01/connection-local-vs-delegate_to-localhost.html.
+ansible_python_interpreter: '{{ ansible_playbook_python }}'

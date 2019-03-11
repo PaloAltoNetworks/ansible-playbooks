@@ -1,0 +1,99 @@
+---
+- hosts: fw
+  gather_facts: false
+  connection: local
+
+  vars_files:
+    - vars/fw_vars.yml
+
+  module_defaults:
+    panos_tag_object:
+      ip_address: '{{ fw_ip_address }}'
+      username: '{{ fw_username }}'
+      password: '{{ fw_password }}'
+      commit: False
+    panos_address_object:
+      ip_address: '{{ fw_ip_address }}'
+      username: '{{ fw_username }}'
+      password: '{{ fw_password }}'
+      commit: False
+    panos_address_group:
+      ip_address: '{{ fw_ip_address }}'
+      username: '{{ fw_username }}'
+      password: '{{ fw_password }}'
+      commit: False
+    panos_service_object:
+      ip_address: '{{ fw_ip_address }}'
+      username: '{{ fw_username }}'
+      password: '{{ fw_password }}'
+      commit: False
+    panos_service_group:
+      ip_address: '{{ fw_ip_address }}'
+      username: '{{ fw_username }}'
+      password: '{{ fw_password }}'
+      commit: False
+    panos_object_facts:
+      ip_address: '{{ fw_ip_address }}'
+      username: '{{ fw_username }}'
+      password: '{{ fw_password }}'
+
+  tasks:
+    - name: Create tag objects
+      panos_tag_object:
+        name: '{{ item.name }}'
+        color: '{{ item.color }}'
+      with_items:
+        - { name: 'Prod', color: 'red' }
+        - { name: 'SI', color: 'blue gray' }
+        - { name: 'Dev', color: 'green'}
+
+    - name: Create address objects
+      panos_address_object:
+        name: '{{ item.name }}'
+        value: '{{ item.value }}'
+        description: '{{ item.description }}'
+        tag: '{{ item.tag|default([]) }}'
+      with_items:
+        - { name: 'Test-1.1.1.1', value: '1.1.1.1', description: 'Description One', tag: ['Prod'] }
+        - { name: 'Test-2.2.2.2', value: '2.2.2.2', description: 'Description Two', tag: ['Prod'] }
+        - { name: 'Test-3.3.3.3', value: '3.3.3.3', description: 'Description Three', tag: ['Prod'] }
+        - { name: 'Test-4.4.4.4', value: '4.4.4.4', description: 'Description Four', tag: ['SI'] }
+        - { name: 'Test-5.5.5.5', value: '5.5.5.5', description: 'Description Five', tag: ['SI'] }
+
+    - name: Create address ranges
+      panos_address_object:
+        name: '{{ item.name }}'
+        value: '{{ item.value }}'
+        description: '{{ item.description|default(omit) }}'
+        address_type: 'ip-range'
+      with_items:
+        - { name: 'Test-Range-1', value: '1.1.1.1-2.2.2.2', description: 'Test Range 1' }
+        - { name: 'Test-Range-2', value: '2.2.2.2-3.3.3.3', description: 'Test Range 2' }
+        - { name: 'Test-Range-3', value: '3.3.3.3-4.4.4.4', description: 'Test Range 3' }
+
+    - name: Create address groups
+      panos_address_group:
+        name: '{{ item.name }}'
+        static_value: '{{ item.static_value }}'
+        tag: '{{ item.tag|default([]) }}'
+      with_items:
+        - { name: 'Prod-Instances', static_value: ['Test-1.1.1.1', 'Test-2.2.2.2', 'Test-3.3.3.3'], tag: ['Prod'] }
+        - { name: 'SI-Instances', static_value: ['Test-4.4.4.4', 'Test-5.5.5.5'], tag: ['SI'] }
+
+    - name: Create service objects
+      panos_service_object:
+        name: '{{ item.name }}'
+        destination_port: '{{ item.destination_port }}'
+        description: '{{ item.description }}'
+        tag: '{{ item.tag|default({}) }}'
+      with_items:
+        - { name: 'ssh-tcp-22', destination_port: '22', description: 'SSH on tcp/22', tag: ['Prod'] }
+        - { name: 'mysql-tcp-3306', destination_port: '3306', description: 'MySQL on tcp/3306', tag: ['Prod'] }
+
+    - name: Create service group objects
+      panos_service_group:
+        name: '{{ item.name }}'
+        value: '{{ item.value }}'
+        tag: '{{ item.tag|default({}) }}'
+      with_items: 
+        - { name: 'Prod-Services', value: ['ssh-tcp-22', 'mysql-tcp-3306'], tag: ['Prod'] }

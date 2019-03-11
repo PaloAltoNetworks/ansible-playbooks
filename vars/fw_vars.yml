@@ -1,0 +1,4 @@
+---
+fw_ip_address: '192.168.55.100'
+fw_username: 'admin'
+fw_password: 'paloalto'
