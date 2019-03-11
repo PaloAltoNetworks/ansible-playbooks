@@ -11,6 +11,7 @@
       ip_address: '{{ fw_ip_address }}'
       username: '{{ fw_username }}'
       password: '{{ fw_password }}'
+      state: 'present'
       commit: false
     panos_nat_rule:
       ip_address: '{{ fw_ip_address }}'
