@@ -1,0 +1,36 @@
+---
+- hosts: fw
+  gather_facts: false
+  connection: local
+
+  vars_files:
+    - vars/fw_vars.yml
+
+  vars:
+    rule_name: 'Survey Rule'
+    source_zone: 'trust'
+    source_ip: 'any'
+    destination_zone: 'untrust'
+    destination_ip: 'any'
+    application: 'any'
+    service: 'application-default'
+
+  module_defaults:
+    panos_security_rule:
+      ip_address: '{{ fw_ip_address }}'
+      username: '{{ fw_username }}'
+      password: '{{ fw_password }}'
+      commit: false
+
+  tasks:
+    - name: Create security rule via extra_vars
+      panos_security_rule:
+        rule_name: '{{ rule_name }}'
+        source_zone: ['{{ source_zone }}']
+        destination_zone: ['{{ destination_zone }}']
+        source_ip: ['{{ source_ip }}']
+        destination_ip: ['{{ destination_ip }}']
+        application: '{{ application }}'
+        service: ['{{ service }}']
+        action: 'allow'
+        tag_name: '{{ tag|default([]) }}'
