@@ -1,0 +1,10 @@
+{
+    "name": "ansible-pan-samples",
+    "dockerFile": "Dockerfile",
+    "extensions": [
+        "ms-python.python"
+    ],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+}
