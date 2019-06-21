@@ -17,16 +17,13 @@
     service:
       - 'application-default'
 
-  module_defaults:
-    panos_security_rule:
-      ip_address: '{{ fw_ip_address }}'
-      username: '{{ fw_username }}'
-      password: '{{ fw_password }}'
-      commit: false
+  roles:
+    - PaloAltoNetworks.paloaltonetworks
 
   tasks:
     - name: Create security rule via extra_vars
       panos_security_rule:
+        provider: '{{ firewall }}'
         rule_name: '{{ rule_name }}'
         source_zone: '{{ source_zone }}'
         destination_zone: '{{ destination_zone }}'
@@ -36,3 +33,4 @@
         service: '{{ service }}'
         action: 'allow'
         tag_name: '{{ tag|default([]) }}'
+        commit: False
