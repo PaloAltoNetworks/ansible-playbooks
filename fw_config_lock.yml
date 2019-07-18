@@ -1,0 +1,36 @@
+---
+- hosts: fw
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars/fw_vars.yml
+
+  roles:
+    - PaloAltoNetworks.paloaltonetworks
+
+  tasks:
+    - name: Wait for config lock
+      panos_op:
+        provider: '{{ firewall }}'
+        cmd: '<show><config-locks></config-locks></show>'
+        cmd_is_xml: True
+      retries: 30
+      delay: 10
+      register: result
+      until: result.stdout_xml == '<response status="success"><result><config-locks /></result></response>'
+
+    - name: Acquire config lock
+      panos_op:
+        provider: '{{ firewall }}'
+        cmd: '<request><config-lock><add><comment>Ansible config lock</comment></add></config-lock></request>'
+        cmd_is_xml: True
+
+    - debug:
+        msg: 'Configuration would be changed here'
+
+    - name: Release config lock
+      panos_op:
+        provider: '{{ firewall }}'
+        cmd: '<request><config-lock><remove></remove></config-lock></request>'
+        cmd_is_xml: True
