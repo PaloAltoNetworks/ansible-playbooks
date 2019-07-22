@@ -1,4 +1,0 @@
-provider:
-  ip_address: '192.168.55.110'
-  username: 'admin'
-  password: 'paloalto'
