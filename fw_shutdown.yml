@@ -1,10 +1,7 @@
 ---
-- hosts: fw
+- hosts: firewall
   connection: local
   gather_facts: false
-
-  vars_files:
-    - vars/fw_vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -12,6 +9,6 @@
   tasks:
     - name: Issue firewall shutdown command
       panos_op:
-        provider: '{{ firewall }}'
+        provider: '{{ provider }}'
         cmd: '<request><shutdown><system></system></shutdown></request>'
         cmd_is_xml: True

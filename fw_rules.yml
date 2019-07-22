@@ -1,10 +1,7 @@
 ---
-- hosts: fw
+- hosts: firewall
   gather_facts: false
   connection: local
-
-  vars_files:
-    - vars/fw_vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -12,7 +9,7 @@
   tasks:
     - name: Create security rules
       panos_security_rule:
-        provider: '{{ firewall }}'
+        provider: '{{ provider }}'
         rule_name: '{{ item.name }}'
         source_zone: ['untrust']
         destination_zone: ['trust']

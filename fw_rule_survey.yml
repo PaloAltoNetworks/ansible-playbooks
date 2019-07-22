@@ -1,10 +1,7 @@
 ---
-- hosts: fw
+- hosts: firewall
   gather_facts: false
   connection: local
-
-  vars_files:
-    - vars/fw_vars.yml
 
   vars:
     rule_name: 'Survey Rule'
@@ -23,7 +20,7 @@
   tasks:
     - name: Create security rule via extra_vars
       panos_security_rule:
-        provider: '{{ firewall }}'
+        provider: '{{ provider }}'
         rule_name: '{{ rule_name }}'
         source_zone: '{{ source_zone }}'
         destination_zone: '{{ destination_zone }}'

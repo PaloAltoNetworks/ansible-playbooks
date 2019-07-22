@@ -1,5 +1,5 @@
 ---
-- hosts: firewalls
+- hosts: firewalls, panoramas
   connection: local
   gather_facts: false
 
@@ -10,7 +10,7 @@
     - PaloAltoNetworks.paloaltonetworks
 
   tasks:
-    - name: Upgrade PAN-OS on firewalls
+    - name: Upgrade PAN-OS on device
       panos_software:
         provider: '{{ provider }}'
         version: '{{ target_panos_release }}'

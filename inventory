@@ -1,1 +1,5 @@
-fw  ansible_host=192.168.55.100
+[firewalls]
+firewall
+
+[panoramas]
+panorama

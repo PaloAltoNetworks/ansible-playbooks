@@ -1,10 +1,7 @@
 ---
-- hosts: fw
+- hosts: firewall
   connection: local
   gather_facts: false
-
-  vars_files:
-    - vars/fw_vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -12,7 +9,7 @@
   tasks:
     - name: Wait for config lock
       panos_op:
-        provider: '{{ firewall }}'
+        provider: '{{ provider }}'
         cmd: '<show><config-locks></config-locks></show>'
         cmd_is_xml: True
       retries: 30
@@ -22,7 +19,7 @@
 
     - name: Acquire config lock
       panos_op:
-        provider: '{{ firewall }}'
+        provider: '{{ provider }}'
         cmd: '<request><config-lock><add><comment>Ansible config lock</comment></add></config-lock></request>'
         cmd_is_xml: True
 
@@ -31,6 +28,6 @@
 
     - name: Release config lock
       panos_op:
-        provider: '{{ firewall }}'
+        provider: '{{ provider }}'
         cmd: '<request><config-lock><remove></remove></config-lock></request>'
         cmd_is_xml: True

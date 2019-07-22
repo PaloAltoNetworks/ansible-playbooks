@@ -1,10 +1,7 @@
 ---
-- hosts: fw
+- hosts: firewall
   gather_facts: false
   connection: local
-
-  vars_files:
-    - vars/fw_vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -12,5 +9,5 @@
   tasks:
     - name: Check to see if firewall is ready
       panos_check:
-        provider: '{{ firewall }}'
+        provider: '{{ provider }}'
         timeout: 30
