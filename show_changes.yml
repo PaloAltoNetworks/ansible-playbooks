@@ -1,0 +1,24 @@
+---
+- hosts: firewall
+  connection: local
+  gather_facts: false
+
+  roles:
+    - PaloAltoNetworks.paloaltonetworks
+
+  tasks:
+    - name: Check for pending changes
+      panos_op:
+        provider: '{{ provider }}'
+        cmd: 'show config list changes'
+      register: changes
+
+    - debug:
+        msg: '{{ changes.stdout | from_json }}'
+
+    - name: Commit changes if needed
+      panos_commit:
+        provider: '{{ provider }}'
+      when: >
+        (changes.stdout | from_json).response.result.journal is defined and
+        (changes.stdout | from_json).response.result.journal.entry | length > 0
