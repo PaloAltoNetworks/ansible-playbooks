@@ -1,4 +1,35 @@
 ---
+# upgrade_ha.yml - PAN-OS HA pair upgrade playbook.
+#
+# Description
+# ===========
+#
+# Upgrades a PAN-OS HA pair to the specified version.  Can be used for a maintenance relase upgrade
+# (from 8.1.2 to 8.1.4), or a major version upgrade with an optional base version download (from 8.1.2, download 9.0.0
+# base image, then download and install 9.0.3-h3).
+#
+# Connection details for both firewalls must be specified in the `primary` and `secondary` variables, either by editing
+# this playbook or by using the `--extra-vars` command line switch to `ansible-playbook`.
+#
+# Usage
+# =====
+#
+# See the VARS section of the playbook for additional customization options.
+#
+# Default run (maintenance release upgrade):
+#
+#  $ ansible-playbook -i 127.0.0.1, upgrade_single.yml --extra-vars @cluster1.yml --extra-vars "target_version=9.0.3-h3"
+#
+# Major version upgrade.  Upgrade content, download base image before download and installing target version:
+#
+#  $ ansible-playbook -i 127.0.0.1 upgrade_single.yml --extra-vars @cluster1.yml \
+#      --extra-vars "upgrade_content=true download_base_version=true base_version=9.0.0 target_version=9.0.3-h3"
+#
+# Notes
+# =====
+#
+# HA pairs with preemption enabled are not supported by this playbook.
+
 - hosts: localhost
   connection: local
 
