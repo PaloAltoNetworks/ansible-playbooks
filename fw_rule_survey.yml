@@ -1,7 +1,24 @@
 ---
-- hosts: firewall
+# fw_rule_survey.yml - Add security rule via Ansible Tower survey.
+#
+# Description
+# ===========
+#
+# This is similar to 'fw_rules.yml', but the variables can be overridden using the output of an Ansible Tower survey.
+#
+# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory fw_rule_survey.yml
+
+- hosts: localhost
   gather_facts: false
   connection: local
+
+  vars_files:
+    - vars.yml
 
   vars:
     rule_name: 'Survey Rule'
@@ -20,7 +37,7 @@
   tasks:
     - name: Create security rule via extra_vars
       panos_security_rule:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         rule_name: '{{ rule_name }}'
         source_zone: '{{ source_zone }}'
         destination_zone: '{{ destination_zone }}'
@@ -30,4 +47,4 @@
         service: '{{ service }}'
         action: 'allow'
         tag_name: '{{ tag|default([]) }}'
-        commit: False
+        commit: false

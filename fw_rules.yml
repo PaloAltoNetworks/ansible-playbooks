@@ -1,25 +1,53 @@
 ---
-- hosts: firewall
+# fw_rules.yml - Create security rules on a PAN-OS device.
+#
+# Description
+# ===========
+#
+# Quick examples of how to use the 'panos_security_rule' module to create security rules on a PAN-OS device.
+#
+# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory fw_rules.yml
+
+- hosts: localhost
   gather_facts: false
   connection: local
+
+  vars_files:
+    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
 
   tasks:
-    - name: Create security rules
+    - name: Create first security rule
       panos_security_rule:
-        provider: '{{ provider }}'
-        rule_name: '{{ item.name }}'
+        provider: '{{ device }}'
+        rule_name: 'Prod SSH Inbound'
         source_zone: ['untrust']
         destination_zone: ['trust']
         source_ip: ['any']
-        destination_ip: '{{ item.destination }}'
-        application: '{{ item.application }}'
+        destination_ip: ['Prod-Instances']
+        application: ['ssh']
         service: ['application-default']
         action: 'allow'
-        tag_name: '{{ item.tag }}'
-        commit: False
-      with_items:
-        - { name: 'Prod SSH Inbound', destination: ['Prod-Instances'], application: ['ssh'], tag: ['Prod'] }
-        - { name: 'SI Inbound', destination: ['SI-Instances'], application: ['ssh', 'mysql'], tag: ['SI'] }
+        tag_name: ['Prod']
+        commit: false
+
+    - name: Create second security rule
+      panos_security_rule:
+        provider: '{{ device }}'
+        rule_name: 'SI Inbound'
+        source_zone: ['untrust']
+        destination_zone: ['trust']
+        source_ip: ['any']
+        destination_ip: ['SI-Instances']
+        application: ['ssh', 'mysql']
+        service: ['application-default']
+        action: 'allow'
+        tag_name: ['SI']
+        commit: false

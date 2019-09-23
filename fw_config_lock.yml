@@ -1,7 +1,25 @@
 ---
-- hosts: firewall
+# fw_config_lock.yml - Handle firewall config locking.
+#
+# Description
+# ===========
+#
+# Quick example of how to handle PAN-OS automatic config locks.  This uses the Ansible 'retries' keyword to wait until
+# there are no active config locks before continuing.
+#
+# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory fw_config_lock.yml
+
+- hosts: localhost
   connection: local
   gather_facts: false
+
+  vars_files:
+    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -9,9 +27,9 @@
   tasks:
     - name: Wait for config lock
       panos_op:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: '<show><config-locks></config-locks></show>'
-        cmd_is_xml: True
+        cmd_is_xml: true
       retries: 30
       delay: 10
       register: result
@@ -19,15 +37,15 @@
 
     - name: Acquire config lock
       panos_op:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: '<request><config-lock><add><comment>Ansible config lock</comment></add></config-lock></request>'
-        cmd_is_xml: True
+        cmd_is_xml: true
 
     - debug:
         msg: 'Configuration would be changed here'
 
     - name: Release config lock
       panos_op:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: '<request><config-lock><remove></remove></config-lock></request>'
-        cmd_is_xml: True
+        cmd_is_xml: true

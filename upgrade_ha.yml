@@ -8,21 +8,21 @@
 # (from 8.1.2 to 8.1.4), or a major version upgrade with an optional base version download (from 8.1.2, download 9.0.0
 # base image, then download and install 9.0.3-h3).
 #
-# Connection details for both firewalls must be specified in the `primary` and `secondary` variables, either by editing
-# this playbook or by using the `--extra-vars` command line switch to `ansible-playbook`.
+# Connection details for both firewalls must be specified in the 'primary' and 'secondary' variables, see 'vars.yml'.
 #
 # Usage
 # =====
 #
-# See the VARS section of the playbook for additional customization options.
+# See the VARS section of the playbook for additional customization options.  These variables can be overridden
+# using the '--extra-vars' command line switch for `ansible-playbook`.
 #
 # Default run (maintenance release upgrade):
 #
-#  $ ansible-playbook -i 127.0.0.1, upgrade_single.yml --extra-vars @cluster1.yml --extra-vars "target_version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target_version=9.0.3-h3"
 #
 # Major version upgrade.  Upgrade content, download base image before download and installing target version:
 #
-#  $ ansible-playbook -i 127.0.0.1 upgrade_single.yml --extra-vars @cluster1.yml \
+#  $ ansible-playbook -i inventory upgrade_ha.yml \
 #      --extra-vars "upgrade_content=true download_base_version=true base_version=9.0.0 target_version=9.0.3-h3"
 #
 # Notes
@@ -33,19 +33,10 @@
 - hosts: localhost
   connection: local
 
+  vars_files:
+    - vars.yml
+
   vars:
-    # primary - Dict object containing connection details for the primary firewall (currently active).
-    # primary:
-    #   ip_address: ...
-    #   username: ...
-    #   password: ...
-
-    # secondary - Dict object containing connection details for the secondary firewall (currently passive).
-    # secondary:
-    #   ip_address: ...
-    #   username: ...
-    #   password: ...
-
     # backup_config - Create a backup of the currently running config before upgrading on both devices.
     backup_config: true
 
@@ -56,7 +47,7 @@
     upgrade_content: true
 
     # download_base_version - Optionally download a new base version to both devices.  Useful when performing a PAN-OS
-    #                         major version upgrade (i.e. when upgrading from 8.1.2 to 9.0.3-h3, download 9.0.0 before 
+    #                         major version upgrade (i.e. when upgrading from 8.1.2 to 9.0.3-h3, download 9.0.0 before
     #                         installing 9.0.3-h3).
     download_base_version: true
 
@@ -95,7 +86,7 @@
           <latest></latest>
           <sync-to-peer>yes</sync-to-peer>
           </download></upgrade></content></request>
-        cmd_is_xml: True
+        cmd_is_xml: true
       register: content_download
       when: upgrade_content
 
@@ -117,7 +108,7 @@
           <version>latest</version>
           <sync-to-peer>yes</sync-to-peer>
           </install></upgrade></content></request>
-        cmd_is_xml: True
+        cmd_is_xml: true
       register: content_install
       when: upgrade_content
 
@@ -149,7 +140,7 @@
           <sync-to-peer>yes</sync-to-peer>
           <version>{{ base_version }}</version>
           </download></software></system></request>
-        cmd_is_xml: True
+        cmd_is_xml: true
       register: base_download
       when: download_base_version
 
@@ -171,7 +162,7 @@
           <sync-to-peer>yes</sync-to-peer>
           <version>{{ target_version }}</version>
           </download></software></system></request>
-        cmd_is_xml: True
+        cmd_is_xml: true
       register: target_download
 
     - name: Poll for target PAN-OS version download
@@ -198,7 +189,7 @@
       delay: 30
       until: ( secondary_active.stdout | from_json).response.result.group["local-info"].state == 'active' and
              ( secondary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
-             ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested'
+             ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested' # yamllint disable-line
 
     - name: Install target PAN-OS version (primary)
       panos_op:
@@ -228,7 +219,7 @@
       panos_op:
         provider: '{{ primary }}'
         cmd: 'show chassis-ready'
-      changed_when: False
+      changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
       retries: 50
@@ -293,7 +284,7 @@
       panos_op:
         provider: '{{ secondary }}'
         cmd: 'show chassis-ready'
-      changed_when: False
+      changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
       retries: 50
