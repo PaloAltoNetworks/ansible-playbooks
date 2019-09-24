@@ -9,6 +9,11 @@
 #
 # Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
 #
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+#
 # Usage
 # =====
 #

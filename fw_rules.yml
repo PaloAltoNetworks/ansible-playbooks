@@ -8,6 +8,11 @@
 #
 # Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
 #
+# Modules Used
+# ============
+#
+# panos_security_rule - https://ansible-pan.readthedocs.io/en/latest/modules/panos_security_rule_module.html
+#
 # Usage
 # =====
 #

@@ -10,6 +10,11 @@
 #
 # Connection details for both firewalls must be specified in the 'primary' and 'secondary' variables, see 'vars.yml'.
 #
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+#
 # Usage
 # =====
 #

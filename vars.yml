@@ -1,7 +1,7 @@
 ---
 # device - Dict object containing connection details for the device (all playbooks *except* 'upgrade_ha.yml').
 device:
-  ip_address: 192.168.55.10
+  ip_address: 192.168.55.100
   username: admin
   password: paloalto
 
