@@ -1,6 +1,6 @@
 FROM python:3.7.3-stretch
   
-ENV ANSIBLE_VERSION=2.8.2
+ENV ANSIBLE_VERSION=2.8.5
 ENV ANSIBLE_PAN_VERSION=2.2.3
 
 RUN pip install --no-cache-dir ansible==${ANSIBLE_VERSION} && \
