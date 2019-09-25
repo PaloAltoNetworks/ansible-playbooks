@@ -1,14 +1,83 @@
 # ansible-pan-samples
 
-Example Ansible playbooks using the Palo Alto Networks [modules](https://ansible-pan.rtfd.io).
+Example Ansible playbooks using the Palo Alto Networks [modules](https://ansible-pan.rtfd.io), and what you'll need to
+get started writing your own.  I try to add interesting things to this repository over time based on customer
+questions, so check back from time to time.
 
-## Requirements
+## Getting Started
 
-* Ansible
-* Palo Alto Networkss role installed from Ansible Galaxy
+### Installing Ansible
 
-## VS Code Remote - Container Extension
+First, you'll need to install Ansible on the machine that will execute your playbooks (called the control node).  The
+control node can be as simple as a laptop, and can be running any Unix-like OS (Linux, BSD, macOS).
+
+You'll want to generally follow the
+[Ansible documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-the-control-node) for installing Ansible on your machine, but here are quick
+instructions for popular choices:
+
+#### CentOS 7
+
+Install direct from Ansible:
+
+```
+$ sudo rpm install -i https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.8.5-1.el7.ans.noarch.rpm
+```
+
+#### Ubuntu 18.04
+
+Install from the Ansible PPA:
+
+```
+$ sudo apt update
+$ sudo apt install software-properties-common
+$ sudo apt-add-repository --yes --update ppa:ansible/ansible
+$ sudo apt install ansible
+```
+
+#### macOS 10.14
+
+Install from Pip (Python package manager):
+
+```
+$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+$ python get-pip.py --user
+$ pip install --user ansible
+$ export PATH=$PATH:$HOME/Library/Python/2.7/bin
+```
+
+You'll want to permanently modify the PATH in your shell's config file as well.
+
+### Installing Palo Alto Networks Role
+
+Once you're done with installing Ansible, install the Palo Alto Networks role from Ansible Galaxy:
+
+```
+$ ansible-galaxy install PaloAltoNetworks.paloaltonetworks
+```
+
+You're now ready to start using these playbooks.
+
+## Another Option: VS Code Remote - Container Extension
 
 This repository also contains a configuration for the
-[VS Code Remote - Container Extension](https://code.visualstudio.com/docs/remote/containers).  It will create and run a
-Docker container with Ansible and the Palo Alto Networks role installed, making getting started easy.
+[VS Code Remote - Container Extension](https://code.visualstudio.com/docs/remote/containers), making getting started
+even easier.
+
+Follow the extension's instructions for installation (you'll install Docker Desktop along the way), then clone this
+repository and open it in VS Code.  It will create and run a Docker container with Ansible and the Palo Alto Networks
+role installed, and you'll be ready to go.
+
+## Sample Playbooks
+
+You can use these playbooks as a base by cloning this repository.  Each of them is documented with how to run them via
+`ansible-playbook` and their customization options.
+
+* check_ready.yml - Checks to see if a firewall is ready via 'show chassis-ready' command.
+* fw_config_lock.yml - Handle firewall config locking.
+* fw_objects.yml - Create various objects on a PAN-OS device.
+* fw_rule_survey.yml - Add security rule via Ansible Tower survey.
+* fw_rules.yml - Create security rules on a PAN-OS device.
+* fw_shutdown.yml - Shuts down a PAN-OS device.
+* show_changes.yml - Checks for uncommitted changes and commits if necessary.
+* upgrade_ha.yml - PAN-OS HA pair upgrade playbook.
+* upgrade_single.yml - PAN-OS single firewall upgrade playbook.
