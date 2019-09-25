@@ -9,28 +9,33 @@
 # base image, then download and install 9.0.3-h3).  Firewall will be rebooted after installing the new PAN-OS version,
 # so use appropriately.
 #
-# Connection details for the firewall must be specified in the `device` variable, either by editing this playbook or
-# by using the `--extra-vars` command line switch to `ansible-playbook`.
+# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
+#
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
 #
 # Usage
 # =====
 #
-# See the VARS section of the playbook for additional customization options.
+# See the VARS section of the playbook for additional customization options.  These variables can be overridden
+# using the '--extra-vars' command line switch for `ansible-playbook`.
 #
 # Default run (maintenance release upgrade):
 #
-#  $ ansible-playbook -i 127.0.0.1, upgrade_single.yml --extra-vars @device.yml --extra-vars "target_version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_single.yml --extra-vars "target_version=9.0.3-h3"
 #
 # Major version upgrade.  Upgrade content, download base image before download and installing target version:
 #
-#  $ ansible-playbook -i 127.0.0.1 upgrade_single.yml --extra-vars @device.yml \
+#  $ ansible-playbook -i inventory upgrade_single.yml \
 #      --extra-vars "upgrade_content=true download_base_version=true base_version=9.0.0 target_version=9.0.3-h3"
 
 - hosts: localhost
   connection: local
 
   vars:
-    # device - Dict object containing connection details for the firewall.
+    # device - Dict object containing connection details for the device.
     # device:
     #   ip_address: ...
     #   username: ...
@@ -130,7 +135,7 @@
       panos_op:
         provider: '{{ device }}'
         cmd: 'show chassis-ready'
-      changed_when: False
+      changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
       retries: 50

@@ -1,7 +1,30 @@
 ---
+# show_changes.yml - Checks for uncommitted changes and commits if necessary.
+#
+# Description
+# ===========
+#
+# This issues the 'show config list changes' command to display the modified config elements in the candidate config
+# using 'panos_op', and issues the commit command if there are uncommitted changes.
+#
+# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
+#
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory show_changes.yml
+
 - hosts: firewall
   connection: local
   gather_facts: false
+
+  vars_files:
+    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -9,7 +32,7 @@
   tasks:
     - name: Check for pending changes
       panos_op:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: 'show config list changes'
       register: changes
 
@@ -18,7 +41,7 @@
 
     - name: Commit changes if needed
       panos_commit:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
       when: >
         (changes.stdout | from_json).response.result.journal is defined and
         (changes.stdout | from_json).response.result.journal.entry | length > 0
