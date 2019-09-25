@@ -7,11 +7,11 @@ device:
 
 # primary/secondary - Dict object containing connection details for the HA pair in 'upgrade_ha.yml'.
 primary:
-  ip_address: 192.168.55.21
+  ip_address: 192.168.55.101
   username: admin
   password: paloalto
 
 secondary:
-  ip_address: 192.168.55.22
+  ip_address: 192.168.55.102
   username: admin
   password: paloalto
