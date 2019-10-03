@@ -34,6 +34,9 @@
 - hosts: localhost
   connection: local
 
+  vars_files:
+    - vars.yml
+
   vars:
     # device - Dict object containing connection details for the device.
     # device:
