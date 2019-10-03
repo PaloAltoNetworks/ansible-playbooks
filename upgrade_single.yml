@@ -72,23 +72,23 @@
       panos_op:
         provider: '{{ device }}'
         cmd: 'save config to {{ backup_filename }}'
-      when: backup_config
+      when: backup_config|bool
 
     - name: Download latest content
       panos_op:
         provider: '{{ device }}'
         cmd: 'request content upgrade download latest'
       register: content_download
-      when: upgrade_content
+      when: upgrade_content|bool
 
     - name: Poll for content download job completion
       panos_op:
         provider: '{{ device }}'
         cmd: 'show jobs id {{ (content_download.stdout | from_json).response.result.job }}'
       register: content_download_job
-      retries: 5
-      delay: 10
-      when: upgrade_content and content_download is not failed
+      retries: 20
+      delay: 60
+      when: upgrade_content|bool and content_download is not failed
       until: ( content_download_job.stdout | from_json ).response.result.job.result == 'OK'
 
     - name: Install latest content
@@ -96,33 +96,38 @@
         provider: '{{ device }}'
         cmd: 'request content upgrade install version latest'
       register: content_install
-      when: upgrade_content
+      when: upgrade_content|bool
 
     - name: Poll for content install job completion
       panos_op:
         provider: '{{ device }}'
         cmd: 'show jobs id {{ (content_install.stdout | from_json).response.result.job }}'
       register: content_install_job
-      retries: 10
-      delay: 30
-      when: upgrade_content and content_install is not failed
+      retries: 20
+      delay: 60
+      when: upgrade_content|bool and content_install is not failed
       until: ( content_install_job.stdout | from_json).response.result.job.result == 'OK'
+
+    - name: Check for software updates
+      panos_op:
+        provider: '{{ device }}'
+        cmd: 'request system software check'
 
     - name: Download base PAN-OS version
       panos_op:
         provider: '{{ device }}'
         cmd: 'request system software download version {{ base_version }}'
       register: base_download
-      when: download_base_version
+      when: download_base_version|bool
 
     - name: Poll for base PAN-OS version download
       panos_op:
         provider: '{{ device }}'
         cmd: 'show jobs id {{ (base_download.stdout | from_json).response.result.job }}'
       register: base_download_job
-      retries: 10
-      delay: 30
-      when: download_base_version and base_download is not failed
+      retries: 20
+      delay: 60
+      when: download_base_version|bool and base_download is not failed
       until: ( base_download_job.stdout | from_json).response.result.job.result == 'OK'
 
     - name: Install target PAN-OS version
@@ -141,5 +146,5 @@
       changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
-      retries: 50
-      delay: 30
+      retries: 30
+      delay: 60
