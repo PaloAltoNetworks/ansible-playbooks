@@ -1,0 +1,100 @@
+---
+# upgrade_content.yml - PAN-OS content upgrade playbook.
+#
+# Description
+# ===========
+#
+# Upgrades the content version on a PAN-OS device or HA pair.
+#
+# Connection details for the device (or the primary member of a HA pair) must be specified in the 'device' host 
+# variable.
+#
+# Usage
+# =====
+#
+# Required Variables:
+#
+#   target: Target PAN-OS device (or primary member of an HA pair).
+#
+# Optional Variables:
+#
+#   sync_to_peer: When the 'target' the primary member of a HA pair, the installed content version will be synced to
+#                 the secondary member when set to 'True'.
+#
+# Upgrade the content on a single PAN-OS device:
+#
+#   $ ansible-playbook -i inventory upgrade_content.yml --extra-vars "target=fw-01"
+
+- hosts: '{{ target }}'
+  connection: local
+  gather_facts: false
+
+  vars:
+    sync_to_peer: False
+
+  roles:
+    - PaloAltoNetworks.paloaltonetworks
+
+  tasks:
+    - name: Check latest content
+      panos_op:
+        provider: '{{ device }}'
+        cmd: 'request content upgrade check'
+      register: check
+      changed_when: False
+
+    - name: Download latest content
+      panos_op:
+        provider: '{{ device }}'
+        cmd: 'request content upgrade download latest'
+      register: download
+      when: not sync_to_peer
+
+    - name: Download latest content (sync to peer)
+      panos_op:
+        provider: '{{ device }}'
+        cmd: |
+          <request><content><upgrade><download>
+          <latest></latest>
+          <sync-to-peer>yes</sync-to-peer>
+          </download></upgrade></content></request>
+        cmd_is_xml: True
+      register: download
+      when: sync_to_peer|bool
+
+    - name: Check content download result
+      panos_op:
+        provider: '{{ device }}'
+        cmd: 'show jobs id {{ (download.stdout | from_json).response.result.job }}'
+      register: download_job
+      until: download_job is not failed and (download_job.stdout | from_json).response.result.job.status == 'FIN'
+      retries: 10
+      delay: 60
+
+    - name: Install latest content
+      panos_op:
+        provider: '{{ device }}'
+        cmd: 'request content upgrade install version latest'
+      register: install
+      when: not sync_to_peer
+
+    - name: Install latest content (sync to peer)
+      panos_op:
+        provider: '{{ device }}'
+        cmd: |
+          <request><content><upgrade><install>
+          <version>latest</version>
+          <sync-to-peer>yes</sync-to-peer>
+          </install></upgrade></content></request>
+        cmd_is_xml: True
+      register: install
+      when: sync_to_peer|bool
+
+    - name: Check content install result
+      panos_op:
+        provider: '{{ device }}'
+        cmd: 'show jobs id {{ (install.stdout | from_json).response.result.job }}'
+      register: install_job
+      until: install_job is not failed and (install_job.stdout | from_json).response.result.job.status == 'FIN'
+      retries: 10
+      delay: 60
