@@ -30,46 +30,20 @@
 #
 # HA pairs with preemption enabled are not supported by this playbook.
 
-- hosts: localhost
+- hosts: '{{ target }}'
   connection: local
 
   vars:
-    # primary - Dict object containing connection details for the primary firewall (currently active).
-    # primary:
-    #   ip_address: ...
-    #   username: ...
-    #   password: ...
-
-    # secondary - Dict object containing connection details for the secondary firewall (currently passive).
-    # secondary:
-    #   ip_address: ...
-    #   username: ...
-    #   password: ...
-
     # backup_config - Create a backup of the currently running config before upgrading on both devices.
     backup_config: true
 
     # backup_filename - Filename for running config backup.
     backup_filename: 'ansible-backup-{{ ansible_date_time.date }}.xml'
 
-    # upgrade_content - Upgrade content to latest version before starting upgrade.
-    upgrade_content: true
-
-    # download_base_version - Optionally download a new base version to both devices.  Useful when performing a PAN-OS
-    #                         major version upgrade (i.e. when upgrading from 8.1.2 to 9.0.3-h3, download 9.0.0 before 
-    #                         installing 9.0.3-h3).
-    download_base_version: true
-
-    # base_version - Base version to download when `download_base_version` is set to `true`.
-    base_version: '9.0.0'
-
-    # target_version - Target version for upgrade.
-    target_version: '9.0.3-h3'
-
     # pause_mid_upgrade - Optionally pause for additional verification during upgrade.  This playbook will perform
     #                     basic checks for HA status and session sync, but this will wait for manual verification before
     #                     upgrading the secondary firewall.
-    pause_mid_upgrade: false
+    pause_mid_upgrade: False
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -87,50 +61,6 @@
         cmd: 'save config to {{ backup_filename }}'
       when: backup_config
 
-    - name: Download latest content
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: |
-          <request><content><upgrade><download>
-          <latest></latest>
-          <sync-to-peer>yes</sync-to-peer>
-          </download></upgrade></content></request>
-        cmd_is_xml: True
-      register: content_download
-      when: upgrade_content
-
-    - name: Poll for content download job completion
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (content_download.stdout | from_json).response.result.job }}'
-      register: content_download_job
-      retries: 5
-      delay: 10
-      when: upgrade_content and content_download is not failed
-      until: ( content_download_job.stdout | from_json ).response.result.job.result == 'OK'
-
-    - name: Install latest content
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: |
-          <request><content><upgrade><install>
-          <version>latest</version>
-          <sync-to-peer>yes</sync-to-peer>
-          </install></upgrade></content></request>
-        cmd_is_xml: True
-      register: content_install
-      when: upgrade_content
-
-    - name: Poll for content install job completion
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (content_install.stdout | from_json).response.result.job }}'
-      register: content_install_job
-      retries: 10
-      delay: 30
-      when: upgrade_content and content_install is not failed
-      until: ( content_install_job.stdout | from_json).response.result.job.result == 'OK'
-
     - name: Check for software updates (primary)
       panos_op:
         provider: '{{ primary }}'
@@ -140,28 +70,6 @@
       panos_op:
         provider: '{{ secondary }}'
         cmd: 'request system software check'
-
-    - name: Download base PAN-OS version
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: |
-          <request><system><software><download>
-          <sync-to-peer>yes</sync-to-peer>
-          <version>{{ base_version }}</version>
-          </download></software></system></request>
-        cmd_is_xml: True
-      register: base_download
-      when: download_base_version
-
-    - name: Poll for base PAN-OS version download
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (base_download.stdout | from_json).response.result.job }}'
-      register: base_download_job
-      retries: 10
-      delay: 30
-      when: download_base_version and base_download is not failed
-      until: ( base_download_job.stdout | from_json).response.result.job.result == 'OK'
 
     - name: Download target PAN-OS version
       panos_op:
@@ -180,7 +88,7 @@
         cmd: 'show jobs id {{ (target_download.stdout | from_json).response.result.job }}'
       register: target_download_job
       retries: 10
-      delay: 30
+      delay: 60
       when: target_download is not failed
       until: ( target_download_job.stdout | from_json).response.result.job.result == 'OK'
 
@@ -231,8 +139,8 @@
       changed_when: False
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
-      retries: 50
-      delay: 30
+      retries: 30
+      delay: 60
 
     - name: State sync check (primary)
       panos_op:
@@ -277,7 +185,7 @@
         cmd: 'show jobs id {{ (secondary_install.stdout | from_json).response.result.job }}'
       register: secondary_install_job
       retries: 10
-      delay: 30
+      delay: 60
       when: secondary_install is not failed
       until: ( secondary_install_job.stdout | from_json).response.result.job.result == 'OK'
 
@@ -296,8 +204,8 @@
       changed_when: False
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
-      retries: 50
-      delay: 30
+      retries: 30
+      delay: 60
 
     - name: State sync check (secondary)
       panos_op:
