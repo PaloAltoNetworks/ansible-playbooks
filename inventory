@@ -1,5 +1,4 @@
-[firewalls]
-firewall
+sample_firewall
+sample_ha_pair
 
-[panoramas]
 panorama

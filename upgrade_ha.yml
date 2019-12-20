@@ -4,26 +4,27 @@
 # Description
 # ===========
 #
-# Upgrades a PAN-OS HA pair to the specified version.  Can be used for a maintenance relase upgrade
-# (from 8.1.2 to 8.1.4), or a major version upgrade with an optional base version download (from 8.1.2, download 9.0.0
-# base image, then download and install 9.0.3-h3).
+# Upgrades a PAN-OS HA pair to the specified version.  Upgrade must be a single step (i.e. 8.1.7 to 8.1.12).  For major
+# version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the 
+# 'download_panos_image.yml' playbook.
 #
-# Connection details for both firewalls must be specified in the `primary` and `secondary` variables, either by editing
-# this playbook or by using the `--extra-vars` command line switch to `ansible-playbook`.
+# Connection details for both members of the HA pair must be specified in the 'primary' and 'secondary' host variables
+# for the target host, or overridden using the `--extra-vars` command line option.
 #
 # Usage
 # =====
 #
+# Required variables:
+#
+#   target: Target HA pair.  See `host_vars/sample_ha_pair.yml` for sample definition of host variables.
+#
+#   target_version: Target version for upgrade.
+#
 # See the VARS section of the playbook for additional customization options.
 #
-# Default run (maintenance release upgrade):
+# Default run:
 #
-#  $ ansible-playbook -i 127.0.0.1, upgrade_single.yml --extra-vars @cluster1.yml --extra-vars "target_version=9.0.3-h3"
-#
-# Major version upgrade.  Upgrade content, download base image before download and installing target version:
-#
-#  $ ansible-playbook -i 127.0.0.1 upgrade_single.yml --extra-vars @cluster1.yml \
-#      --extra-vars "upgrade_content=true download_base_version=true base_version=9.0.0 target_version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=sample_ha_pair target_version=9.0.3-h3"
 #
 # Notes
 # =====
