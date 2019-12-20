@@ -1,5 +1,5 @@
 ---
-- hosts: firewall
+- hosts: '{{ target }}'
   connection: local
   gather_facts: false
 
@@ -9,7 +9,7 @@
   tasks:
     - name: Check for pending changes
       panos_op:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: 'show config list changes'
       register: changes
 
@@ -18,7 +18,7 @@
 
     - name: Commit changes if needed
       panos_commit:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
       when: >
         (changes.stdout | from_json).response.result.journal is defined and
         (changes.stdout | from_json).response.result.journal.entry | length > 0

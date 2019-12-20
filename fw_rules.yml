@@ -1,5 +1,5 @@
 ---
-- hosts: firewall
+- hosts: '{{ target }}}}'
   gather_facts: false
   connection: local
 
@@ -9,7 +9,7 @@
   tasks:
     - name: Create security rules
       panos_security_rule:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         rule_name: '{{ item.name }}'
         source_zone: ['untrust']
         destination_zone: ['trust']

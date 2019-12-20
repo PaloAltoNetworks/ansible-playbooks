@@ -1,5 +1,5 @@
 ---
-- hosts: firewall
+- hosts: '{{ target }}'
   gather_facts: false
   connection: local
 
@@ -9,7 +9,7 @@
   tasks:
     - name: Create tag objects
       panos_tag_object:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         name: '{{ item.name }}'
         color: '{{ item.color }}'
         commit: False
@@ -20,7 +20,7 @@
 
     - name: Create address objects
       panos_address_object:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         name: '{{ item.name }}'
         value: '{{ item.value }}'
         description: '{{ item.description }}'
@@ -35,7 +35,7 @@
 
     - name: Create address ranges
       panos_address_object:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         name: '{{ item.name }}'
         value: '{{ item.value }}'
         description: '{{ item.description|default(omit) }}'
@@ -48,7 +48,7 @@
 
     - name: Create address groups
       panos_address_group:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         name: '{{ item.name }}'
         static_value: '{{ item.static_value }}'
         tag: '{{ item.tag|default([]) }}'
@@ -59,7 +59,7 @@
 
     - name: Create service objects
       panos_service_object:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         name: '{{ item.name }}'
         destination_port: '{{ item.destination_port }}'
         description: '{{ item.description }}'
@@ -71,7 +71,7 @@
 
     - name: Create service group objects
       panos_service_group:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         name: '{{ item.name }}'
         value: '{{ item.value }}'
         tag: '{{ item.tag|default({}) }}'

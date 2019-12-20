@@ -1,5 +1,5 @@
 ---
-- hosts: firewall
+- hosts: '{{ target }}'
   gather_facts: false
   connection: local
 
@@ -9,5 +9,5 @@
   tasks:
     - name: Check to see if firewall is ready
       panos_check:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         timeout: 30

@@ -1,5 +1,5 @@
 ---
-- hosts: firewall
+- hosts: '{{ target }}'
   connection: local
   gather_facts: false
 
@@ -9,6 +9,6 @@
   tasks:
     - name: Issue firewall shutdown command
       panos_op:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: '<request><shutdown><system></system></shutdown></request>'
         cmd_is_xml: True
