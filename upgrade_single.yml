@@ -8,8 +8,12 @@
 # For major version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade,
 # see the 'download_panos_image.yml' playbook.
 #
-# Connection details for the firewall must be specified in the `device` variable, either by editing this playbook or
-# by using the `--extra-vars` command line switch to `ansible-playbook`.
+# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
+#
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
 #
 # Usage
 # =====
@@ -30,6 +34,9 @@
 - hosts: '{{ target }}'
   connection: local
 
+  vars_files:
+    - vars.yml
+
   vars:
     # backup_config - Create a backup of the currently running config.
     backup_config: true
@@ -45,7 +52,7 @@
       panos_op:
         provider: '{{ device }}'
         cmd: 'save config to {{ backup_filename }}'
-      when: backup_config
+      when: backup_config|bool
 
     - name: Install target PAN-OS version
       panos_software:
@@ -60,8 +67,8 @@
       panos_op:
         provider: '{{ device }}'
         cmd: 'show chassis-ready'
-      changed_when: False
+      changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
-      retries: 50
-      delay: 30
+      retries: 30
+      delay: 60

@@ -80,7 +80,7 @@
           <sync-to-peer>yes</sync-to-peer>
           <version>{{ target_version }}</version>
           </download></software></system></request>
-        cmd_is_xml: True
+        cmd_is_xml: true
       register: target_download
 
     - name: Poll for target PAN-OS version download
@@ -107,7 +107,7 @@
       delay: 30
       until: ( secondary_active.stdout | from_json).response.result.group["local-info"].state == 'active' and
              ( secondary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
-             ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested'
+             ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested' # yamllint disable-line
 
     - name: Install target PAN-OS version (primary)
       panos_op:
@@ -137,7 +137,7 @@
       panos_op:
         provider: '{{ primary }}'
         cmd: 'show chassis-ready'
-      changed_when: False
+      changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
       retries: 30
@@ -202,7 +202,7 @@
       panos_op:
         provider: '{{ secondary }}'
         cmd: 'show chassis-ready'
-      changed_when: False
+      changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
       retries: 30

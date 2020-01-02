@@ -1,7 +1,28 @@
 ---
+# show_changes.yml - Checks for uncommitted changes and commits if necessary.
+#
+# Description
+# ===========
+#
+# This issues the 'show config list changes' command to display the modified config elements in the candidate config
+# using 'panos_op', and issues the commit command if there are uncommitted changes.
+#
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory show_changes.yml
+
 - hosts: '{{ target | default(firewall) }}'
   connection: local
   gather_facts: false
+
+  vars_files:
+    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks

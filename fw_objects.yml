@@ -1,5 +1,29 @@
 ---
-- hosts: '{{ target | default(firewall) }}'
+# fw_objects.yml - Create various objects on a PAN-OS device.
+#
+# Description
+# ===========
+#
+# Demonstrates how to create tags, address objects, address groups, service objects, and service groups using the
+# appropriate PAN-OS Ansible modules.  These tasks use the Ansible 'with_items' keyword for looping
+# (https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#iterating-over-a-list-of-hashes).
+#
+#
+# Modules Used
+# ============
+#
+# panos_tag_object - https://ansible-pan.readthedocs.io/en/latest/modules/panos_tag_object_module.html
+# panos_address_object - https://ansible-pan.readthedocs.io/en/latest/modules/panos_address_object_module.html
+# panos_address_group - https://ansible-pan.readthedocs.io/en/latest/modules/panos_address_group_module.html
+# panos_service_object - https://ansible-pan.readthedocs.io/en/latest/modules/panos_service_object_module.html
+# panos_service_group - https://ansible-pan.readthedocs.io/en/latest/modules/panos_service_group_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory fw_objects.yml --extra-vars @device.yml
+
+- - hosts: '{{ target | default(firewall) }}'
   gather_facts: false
   connection: local
 
@@ -12,11 +36,11 @@
         provider: '{{ device }}'
         name: '{{ item.name }}'
         color: '{{ item.color }}'
-        commit: False
+        commit: false
       with_items:
         - { name: 'Prod', color: 'red' }
         - { name: 'SI', color: 'blue gray' }
-        - { name: 'Dev', color: 'green'}
+        - { name: 'Dev', color: 'green' }
 
     - name: Create address objects
       panos_address_object:
@@ -25,7 +49,7 @@
         value: '{{ item.value }}'
         description: '{{ item.description }}'
         tag: '{{ item.tag|default([]) }}'
-        commit: False
+        commit: false
       with_items:
         - { name: 'Test-1.1.1.1', value: '1.1.1.1', description: 'Description One', tag: ['Prod'] }
         - { name: 'Test-2.2.2.2', value: '2.2.2.2', description: 'Description Two', tag: ['Prod'] }
@@ -40,7 +64,7 @@
         value: '{{ item.value }}'
         description: '{{ item.description|default(omit) }}'
         address_type: 'ip-range'
-        commit: False
+        commit: false
       with_items:
         - { name: 'Test-Range-1', value: '1.1.1.1-2.2.2.2', description: 'Test Range 1' }
         - { name: 'Test-Range-2', value: '2.2.2.2-3.3.3.3', description: 'Test Range 2' }
@@ -52,7 +76,7 @@
         name: '{{ item.name }}'
         static_value: '{{ item.static_value }}'
         tag: '{{ item.tag|default([]) }}'
-        commit: False
+        commit: false
       with_items:
         - { name: 'Prod-Instances', static_value: ['Test-1.1.1.1', 'Test-2.2.2.2', 'Test-3.3.3.3'], tag: ['Prod'] }
         - { name: 'SI-Instances', static_value: ['Test-4.4.4.4', 'Test-5.5.5.5'], tag: ['SI'] }
@@ -64,7 +88,7 @@
         destination_port: '{{ item.destination_port }}'
         description: '{{ item.description }}'
         tag: '{{ item.tag|default({}) }}'
-        commit: False
+        commit: false
       with_items:
         - { name: 'ssh-tcp-22', destination_port: '22', description: 'SSH on tcp/22', tag: ['Prod'] }
         - { name: 'mysql-tcp-3306', destination_port: '3306', description: 'MySQL on tcp/3306', tag: ['Prod'] }
@@ -75,6 +99,6 @@
         name: '{{ item.name }}'
         value: '{{ item.value }}'
         tag: '{{ item.tag|default({}) }}'
-        commit: False
-      with_items: 
+        commit: false
+      with_items:
         - { name: 'Prod-Services', value: ['ssh-tcp-22', 'mysql-tcp-3306'], tag: ['Prod'] }

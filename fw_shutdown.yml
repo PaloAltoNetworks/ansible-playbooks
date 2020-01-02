@@ -1,5 +1,23 @@
 ---
-- hosts: '{{ target | default(firewall) }}'
+# fw_shutdown.yml - Shuts down a PAN-OS device.
+#
+# Description
+# ===========
+#
+# This issues the shutdown command using the 'panos_op' module.  This uses the Ansible 'ignore_errors' keyword because
+# issuing the shutdown command terminates the API connection.
+#
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory fw_shutdown.yml
+
+- - hosts: '{{ target | default(firewall) }}'
   connection: local
   gather_facts: false
 
@@ -11,4 +29,5 @@
       panos_op:
         provider: '{{ device }}'
         cmd: '<request><shutdown><system></system></shutdown></request>'
-        cmd_is_xml: True
+        cmd_is_xml: true
+      ignore_errors: true
