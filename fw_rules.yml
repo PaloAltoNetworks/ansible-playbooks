@@ -6,8 +6,6 @@
 #
 # Quick examples of how to use the 'panos_security_rule' module to create security rules on a PAN-OS device.
 #
-# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
-#
 # Modules Used
 # ============
 #
@@ -18,12 +16,8 @@
 #
 #   $ ansible-playbook -i inventory fw_rules.yml
 
-- hosts: localhost
-  gather_facts: false
+- hosts: '{{ target | default("firewall") }}'
   connection: local
-
-  vars_files:
-    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks

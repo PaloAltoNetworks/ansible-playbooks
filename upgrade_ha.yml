@@ -4,42 +4,35 @@
 # Description
 # ===========
 #
-# Upgrades a PAN-OS HA pair to the specified version.  Can be used for a maintenance relase upgrade
-# (from 8.1.2 to 8.1.4), or a major version upgrade with an optional base version download (from 8.1.2, download 9.0.0
-# base image, then download and install 9.0.3-h3).
+# Upgrades a PAN-OS HA pair to the specified version.  Upgrade must be a single step (i.e. 8.1.7 to 8.1.12).  For major
+# version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the 
+# 'download_panos_image.yml' playbook.
 #
-# Connection details for both firewalls must be specified in the 'primary' and 'secondary' variables, see 'vars.yml'.
-#
-# Modules Used
-# ============
-#
-# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+# Connection details for both members of the HA pair must be specified in the 'primary' and 'secondary' host variables
+# for the target host, or overridden using the `--extra-vars` command line option.
 #
 # Usage
 # =====
 #
-# See the VARS section of the playbook for additional customization options.  These variables can be overridden
-# using the '--extra-vars' command line switch for `ansible-playbook`.
+# Required variables:
 #
-# Default run (maintenance release upgrade):
+#   target: Target HA pair.  See `host_vars/ha_pair.yml` for sample definition of host variables.
 #
-#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target_version=9.0.3-h3"
+#   target_version: Target version for upgrade.
 #
-# Major version upgrade.  Upgrade content, download base image before download and installing target version:
+# See the VARS section of the playbook for additional customization options.
 #
-#  $ ansible-playbook -i inventory upgrade_ha.yml \
-#      --extra-vars "upgrade_content=true download_base_version=true base_version=9.0.0 target_version=9.0.3-h3"
+# Default run:
+#
+#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=ha_pair target_version=9.0.3-h3"
 #
 # Notes
 # =====
 #
 # HA pairs with preemption enabled are not supported by this playbook.
 
-- hosts: localhost
+- hosts: '{{ target | default("ha_pair") }}'
   connection: local
-
-  vars_files:
-    - vars.yml
 
   vars:
     # backup_config - Create a backup of the currently running config before upgrading on both devices.
@@ -48,24 +41,10 @@
     # backup_filename - Filename for running config backup.
     backup_filename: 'ansible-backup-{{ ansible_date_time.date }}.xml'
 
-    # upgrade_content - Upgrade content to latest version before starting upgrade.
-    upgrade_content: true
-
-    # download_base_version - Optionally download a new base version to both devices.  Useful when performing a PAN-OS
-    #                         major version upgrade (i.e. when upgrading from 8.1.2 to 9.0.3-h3, download 9.0.0 before
-    #                         installing 9.0.3-h3).
-    download_base_version: true
-
-    # base_version - Base version to download when `download_base_version` is set to `true`.
-    base_version: '9.0.0'
-
-    # target_version - Target version for upgrade.
-    target_version: '9.0.3-h3'
-
     # pause_mid_upgrade - Optionally pause for additional verification during upgrade.  This playbook will perform
     #                     basic checks for HA status and session sync, but this will wait for manual verification before
     #                     upgrading the secondary firewall.
-    pause_mid_upgrade: false
+    pause_mid_upgrade: False
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -83,50 +62,6 @@
         cmd: 'save config to {{ backup_filename }}'
       when: backup_config
 
-    - name: Download latest content
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: |
-          <request><content><upgrade><download>
-          <latest></latest>
-          <sync-to-peer>yes</sync-to-peer>
-          </download></upgrade></content></request>
-        cmd_is_xml: true
-      register: content_download
-      when: upgrade_content
-
-    - name: Poll for content download job completion
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (content_download.stdout | from_json).response.result.job }}'
-      register: content_download_job
-      retries: 5
-      delay: 10
-      when: upgrade_content and content_download is not failed
-      until: ( content_download_job.stdout | from_json ).response.result.job.result == 'OK'
-
-    - name: Install latest content
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: |
-          <request><content><upgrade><install>
-          <version>latest</version>
-          <sync-to-peer>yes</sync-to-peer>
-          </install></upgrade></content></request>
-        cmd_is_xml: true
-      register: content_install
-      when: upgrade_content
-
-    - name: Poll for content install job completion
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (content_install.stdout | from_json).response.result.job }}'
-      register: content_install_job
-      retries: 10
-      delay: 30
-      when: upgrade_content and content_install is not failed
-      until: ( content_install_job.stdout | from_json).response.result.job.result == 'OK'
-
     - name: Check for software updates (primary)
       panos_op:
         provider: '{{ primary }}'
@@ -136,28 +71,6 @@
       panos_op:
         provider: '{{ secondary }}'
         cmd: 'request system software check'
-
-    - name: Download base PAN-OS version
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: |
-          <request><system><software><download>
-          <sync-to-peer>yes</sync-to-peer>
-          <version>{{ base_version }}</version>
-          </download></software></system></request>
-        cmd_is_xml: true
-      register: base_download
-      when: download_base_version
-
-    - name: Poll for base PAN-OS version download
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (base_download.stdout | from_json).response.result.job }}'
-      register: base_download_job
-      retries: 10
-      delay: 30
-      when: download_base_version and base_download is not failed
-      until: ( base_download_job.stdout | from_json).response.result.job.result == 'OK'
 
     - name: Download target PAN-OS version
       panos_op:
@@ -176,7 +89,7 @@
         cmd: 'show jobs id {{ (target_download.stdout | from_json).response.result.job }}'
       register: target_download_job
       retries: 10
-      delay: 30
+      delay: 60
       when: target_download is not failed
       until: ( target_download_job.stdout | from_json).response.result.job.result == 'OK'
 
@@ -227,8 +140,8 @@
       changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
-      retries: 50
-      delay: 30
+      retries: 30
+      delay: 60
 
     - name: State sync check (primary)
       panos_op:
@@ -273,7 +186,7 @@
         cmd: 'show jobs id {{ (secondary_install.stdout | from_json).response.result.job }}'
       register: secondary_install_job
       retries: 10
-      delay: 30
+      delay: 60
       when: secondary_install is not failed
       until: ( secondary_install_job.stdout | from_json).response.result.job.result == 'OK'
 
@@ -292,8 +205,8 @@
       changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
-      retries: 50
-      delay: 30
+      retries: 30
+      delay: 60
 
     - name: State sync check (secondary)
       panos_op:

@@ -19,12 +19,8 @@
 #
 #   $ ansible-playbook -i inventory check_ready.yml
 
-- hosts: localhost
-  gather_facts: false
+- hosts: '{{ target | default("firewall") }}'
   connection: local
-
-  vars_files:
-    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks

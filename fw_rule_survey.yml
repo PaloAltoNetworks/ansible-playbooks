@@ -6,8 +6,6 @@
 #
 # This is similar to 'fw_rules.yml', but the variables can be overridden using the output of an Ansible Tower survey.
 #
-# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
-#
 # Modules Used
 # ============
 #
@@ -18,12 +16,8 @@
 #
 #   $ ansible-playbook -i inventory fw_rule_survey.yml
 
-- hosts: localhost
-  gather_facts: false
+- hosts: '{{ target | default("firewall") }}'
   connection: local
-
-  vars_files:
-    - vars.yml
 
   vars:
     rule_name: 'Survey Rule'

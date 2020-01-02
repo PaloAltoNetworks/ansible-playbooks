@@ -17,12 +17,8 @@
 #
 #   $ ansible-playbook -i inventory fw_shutdown.yml
 
-- hosts: firewall
+- hosts: '{{ target | default("firewall") }}'
   connection: local
-  gather_facts: false
-
-  vars_files:
-    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks

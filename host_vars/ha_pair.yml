@@ -1,0 +1,15 @@
+---
+# Connection details for the primary and secondary members of the HA pair.
+primary:
+  ip_address: '192.168.55.11'
+  username: 'admin'
+  password: 'P4loalto!'
+
+secondary:
+  ip_address: '192.168.55.12'
+  username: 'admin'
+  password: 'P4loalto!'
+
+# All other playbooks in this repository use 'device' as their connection spec.  Point that at the primary member
+# in order to use them as well.
+device: '{{ primary }}'

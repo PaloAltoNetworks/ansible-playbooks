@@ -7,8 +7,6 @@
 # This issues the 'show config list changes' command to display the modified config elements in the candidate config
 # using 'panos_op', and issues the commit command if there are uncommitted changes.
 #
-# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
-#
 # Modules Used
 # ============
 #
@@ -19,12 +17,9 @@
 #
 #   $ ansible-playbook -i inventory show_changes.yml
 
-- hosts: firewall
+- hosts: '{{ target | default("firewall") }}'
   connection: local
   gather_facts: false
-
-  vars_files:
-    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks

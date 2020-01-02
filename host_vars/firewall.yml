@@ -1,0 +1,5 @@
+---
+device:
+  ip_address: '192.168.55.10'
+  username: 'admin'
+  password: 'P4loalto!'

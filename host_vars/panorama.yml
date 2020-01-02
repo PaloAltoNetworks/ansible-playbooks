@@ -1,0 +1,5 @@
+---
+provider:
+  ip_address: '192.168.55.5'
+  username: 'admin'
+  password: 'P4loalto!'

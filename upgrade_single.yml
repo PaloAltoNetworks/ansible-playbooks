@@ -4,10 +4,9 @@
 # Description
 # ===========
 #
-# Upgrades a single PAN-OS firewall to the specified version.  Can be used for a maintenance release upgrade
-# (from 8.1.2 to 8.1.4), or a major version upgrade with an optional base version download (from 8.1.2, download 9.0.0
-# base image, then download and install 9.0.3-h3).  Firewall will be rebooted after installing the new PAN-OS version,
-# so use appropriately.
+# Upgrades a single PAN-OS device to the specified version.  Upgrade must be a single step (i.e. 8.1.7 to 8.1.12).
+# For major version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade,
+# see the 'download_panos_image.yml' playbook.
 #
 # Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
 #
@@ -19,50 +18,28 @@
 # Usage
 # =====
 #
-# See the VARS section of the playbook for additional customization options.  These variables can be overridden
-# using the '--extra-vars' command line switch for `ansible-playbook`.
+# Required variables:
+#
+#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
+#           definition of host variables.
+#
+#   target_version: Target version for upgrade.
+#
+# See the VARS section of the playbook for additional customization options.
 #
 # Default run (maintenance release upgrade):
 #
-#  $ ansible-playbook -i inventory upgrade_single.yml --extra-vars "target_version=9.0.3-h3"
-#
-# Major version upgrade.  Upgrade content, download base image before download and installing target version:
-#
-#  $ ansible-playbook -i inventory upgrade_single.yml \
-#      --extra-vars "upgrade_content=true download_base_version=true base_version=9.0.0 target_version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=firewall target_version=9.0.3-h3"
 
-- hosts: localhost
+- hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  vars_files:
-    - vars.yml
-
   vars:
-    # device - Dict object containing connection details for the device.
-    # device:
-    #   ip_address: ...
-    #   username: ...
-    #   password: ...
-
     # backup_config - Create a backup of the currently running config.
     backup_config: true
 
     # backup_filename - Filename for running config backup.
     backup_filename: 'ansible-backup-{{ ansible_date_time.date }}.xml'
-
-    # upgrade_content - Upgrade content to latest version before starting upgrade.
-    upgrade_content: false
-
-    # download_base_version - Optionally download a new base version to both devices.  Useful when performing a PAN-OS
-    #                         major version upgrade (i.e. when upgrading from 8.1.2 to 9.0.3-h3, download 9.0.0 before
-    #                         installing 9.0.3-h3).
-    download_base_version: false
-
-    # base_version - Base version to download when `download_base_version` is set to `true`.
-    base_version: '9.0.0'
-
-    # target_version - Target version for upgrade.
-    target_version: '9.0.3-h3'
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -73,62 +50,6 @@
         provider: '{{ device }}'
         cmd: 'save config to {{ backup_filename }}'
       when: backup_config|bool
-
-    - name: Download latest content
-      panos_op:
-        provider: '{{ device }}'
-        cmd: 'request content upgrade download latest'
-      register: content_download
-      when: upgrade_content|bool
-
-    - name: Poll for content download job completion
-      panos_op:
-        provider: '{{ device }}'
-        cmd: 'show jobs id {{ (content_download.stdout | from_json).response.result.job }}'
-      register: content_download_job
-      retries: 20
-      delay: 60
-      when: upgrade_content|bool and content_download is not failed
-      until: ( content_download_job.stdout | from_json ).response.result.job.result == 'OK'
-
-    - name: Install latest content
-      panos_op:
-        provider: '{{ device }}'
-        cmd: 'request content upgrade install version latest'
-      register: content_install
-      when: upgrade_content|bool
-
-    - name: Poll for content install job completion
-      panos_op:
-        provider: '{{ device }}'
-        cmd: 'show jobs id {{ (content_install.stdout | from_json).response.result.job }}'
-      register: content_install_job
-      retries: 20
-      delay: 60
-      when: upgrade_content|bool and content_install is not failed
-      until: ( content_install_job.stdout | from_json).response.result.job.result == 'OK'
-
-    - name: Check for software updates
-      panos_op:
-        provider: '{{ device }}'
-        cmd: 'request system software check'
-
-    - name: Download base PAN-OS version
-      panos_op:
-        provider: '{{ device }}'
-        cmd: 'request system software download version {{ base_version }}'
-      register: base_download
-      when: download_base_version|bool
-
-    - name: Poll for base PAN-OS version download
-      panos_op:
-        provider: '{{ device }}'
-        cmd: 'show jobs id {{ (base_download.stdout | from_json).response.result.job }}'
-      register: base_download_job
-      retries: 20
-      delay: 60
-      when: download_base_version|bool and base_download is not failed
-      until: ( base_download_job.stdout | from_json).response.result.job.result == 'OK'
 
     - name: Install target PAN-OS version
       panos_software:

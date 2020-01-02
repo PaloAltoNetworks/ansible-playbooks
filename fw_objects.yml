@@ -8,7 +8,6 @@
 # appropriate PAN-OS Ansible modules.  These tasks use the Ansible 'with_items' keyword for looping
 # (https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#iterating-over-a-list-of-hashes).
 #
-# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
 #
 # Modules Used
 # ============
@@ -24,12 +23,8 @@
 #
 #   $ ansible-playbook -i inventory fw_objects.yml --extra-vars @device.yml
 
-- hosts: localhost
-  gather_facts: false
+- hosts: '{{ target | default("firewall") }}'
   connection: local
-
-  vars_files:
-    - vars.yml
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
