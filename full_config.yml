@@ -1,5 +1,6 @@
 ---
 - hosts: '{{ target | default("firewall") }}'
+  connection: local
 
   vars:
     interfaces:
@@ -169,7 +170,7 @@
     - name: Create address objects
       panos_address_object:
         provider: '{{ device }}'
-        device_group: '{{ device_group|default(omit) }}'
+        device_group: '{{ device_group | default(omit) }}'
         name: '{{ item.name }}'
         value: '{{ item.value }}'
         commit: false
@@ -190,7 +191,7 @@
     - name: Create security rules
       panos_security_rule:
         provider: '{{ device }}'
-        device_group: '{{ device_group|default(omit) }}'
+        device_group: '{{ device_group | default(omit) }}'
         rule_name: '{{ item.rule_name }}'
         source_zone: '{{ item.source_zone }}'
         source_ip: '{{ item.source_ip }}'
@@ -206,7 +207,7 @@
     - name: Create inbound NAT rules
       panos_nat_rule:
         provider: '{{ device }}'
-        device_group: '{{ device_group|default(omit) }}'
+        device_group: '{{ device_group | default(omit) }}'
         rule_name: '{{ item.rule_name }}'
         source_zone: '{{ item.source_zone }}'
         source_ip: '{{ item.source_ip }}'
@@ -224,7 +225,7 @@
     - name: Create outbound NAT rule
       panos_nat_rule:
         provider: '{{ device }}'
-        device_group: '{{ device_group|default(omit) }}'
+        device_group: '{{ device_group | default(omit) }}'
         rule_name: 'Outbound NAT'
         source_zone: ['web', 'db']
         source_ip: ['any']
@@ -233,7 +234,7 @@
         snat_type: 'dynamic-ip-and-port'
         snat_interface: 'ethernet1/1'
         commit: false
-        tags: nat_rules
+      tags: nat_rules
 
     - name: Commit the candidate configuration
       panos_commit:

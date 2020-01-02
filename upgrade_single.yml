@@ -34,9 +34,6 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  vars_files:
-    - vars.yml
-
   vars:
     # backup_config - Create a backup of the currently running config.
     backup_config: true

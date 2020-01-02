@@ -27,7 +27,6 @@
 
 - hosts: '{{ target | default("firewall") }}'
   connection: local
-  gather_facts: false
 
   vars:
     sync_to_peer: False
@@ -43,15 +42,6 @@
       register: check
       changed_when: False
 
-    # - name: Download latest content
-    #   panos_op:
-    #     provider: '{{ device }}'
-    #     cmd: |
-    #       <request><content><upgrade><download><latest></latest></download></upgrade></content></request>
-    #     cmd_is_xml: True
-    #   register: download2
-    #   when: sync_to_peer|bool == False
-
     - name: Download latest content
       panos_op:
         provider: '{{ device }}'
@@ -62,9 +52,6 @@
           </download></upgrade></content></request>
         cmd_is_xml: True
       register: download
-
-    - debug:
-        var: download
 
     - name: Check content download result
       panos_op:

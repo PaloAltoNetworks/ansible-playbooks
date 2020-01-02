@@ -19,16 +19,13 @@
 #
 #   $ ansible-playbook -i inventory check_ready.yml
 
-- - hosts: '{{ target | default("firewall") }}'
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
 
   tasks:
-    - name: Check to see if firewall is ready
-      panos_check:
-        provider: '{{ device }}'
-        timeout: 30
     - name: Check to see if device is ready
       panos_op:
         provider: '{{ device }}'

@@ -17,7 +17,11 @@
 #
 #   $ ansible-playbook -i inventory fw_config_lock.yml
 
-- - hosts: '{{ target | default("firewall") }}'
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
+
+  vars:
+    vsys: vsys1
 
   roles:
     - PaloAltoNetworks.paloaltonetworks
@@ -26,7 +30,7 @@
     - name: Wait for config lock
       panos_op:
         provider: '{{ device }}'
-        cmd: '<show><config-locks></config-locks></show>'
+        cmd: '<show><config-locks><vsys>{{ vsys }}</vsys></config-locks></show>'
         cmd_is_xml: true
       retries: 30
       delay: 10
