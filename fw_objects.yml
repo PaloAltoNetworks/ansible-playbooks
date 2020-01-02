@@ -23,7 +23,7 @@
 #
 #   $ ansible-playbook -i inventory fw_objects.yml --extra-vars @device.yml
 
-- - hosts: '{{ target | default(firewall) }}'
+- - hosts: '{{ target | default("firewall") }}'
   gather_facts: false
   connection: local
 

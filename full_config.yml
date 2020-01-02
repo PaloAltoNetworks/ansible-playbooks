@@ -1,11 +1,5 @@
 ---
-
-- hosts: localhost
-  gather_facts: false
-  connection: local
-
-  vars_files:
-    - vars.yml
+- hosts: '{{ target | default("firewall") }}'
 
   vars:
     interfaces:

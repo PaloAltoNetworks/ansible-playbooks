@@ -25,7 +25,7 @@
 #
 #   $ ansible-playbook -i inventory upgrade_content.yml --extra-vars "target=firewall"
 
-- hosts: '{{ target | default(firewall) }}'
+- hosts: '{{ target | default("firewall") }}'
   connection: local
   gather_facts: false
 
