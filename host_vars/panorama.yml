@@ -1,5 +1,5 @@
 ---
 provider:
-  ip_address: '172.16.0.6'
+  ip_address: '192.168.55.5'
   username: 'admin'
-  password: 'paloalto'
+  password: 'P4loalto!'

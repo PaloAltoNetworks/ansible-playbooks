@@ -1,5 +1,5 @@
 ---
-- hosts: '{{ target }}'
+- hosts: '{{ target | default(firewall) }}'
   connection: local
   gather_facts: false
 

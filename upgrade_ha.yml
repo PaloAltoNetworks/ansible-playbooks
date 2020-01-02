@@ -16,7 +16,7 @@
 #
 # Required variables:
 #
-#   target: Target HA pair.  See `host_vars/sample_ha_pair.yml` for sample definition of host variables.
+#   target: Target HA pair.  See `host_vars/ha_pair.yml` for sample definition of host variables.
 #
 #   target_version: Target version for upgrade.
 #
@@ -24,14 +24,14 @@
 #
 # Default run:
 #
-#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=sample_ha_pair target_version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=ha_pair target_version=9.0.3-h3"
 #
 # Notes
 # =====
 #
 # HA pairs with preemption enabled are not supported by this playbook.
 
-- hosts: '{{ target }}'
+- hosts: '{{ target | default(firewall) }}'
   connection: local
 
   vars:

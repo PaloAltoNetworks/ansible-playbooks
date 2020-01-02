@@ -1,12 +1,12 @@
 ---
 # Connection details for the primary and secondary members of the HA pair.
 primary:
-  ip_address: '192.168.55.31'
+  ip_address: '192.168.55.11'
   username: 'admin'
   password: 'P4loalto!'
 
 secondary:
-  ip_address: '192.168.55.32'
+  ip_address: '192.168.55.12'
   username: 'admin'
   password: 'P4loalto!'
 
