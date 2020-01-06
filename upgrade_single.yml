@@ -8,7 +8,7 @@
 # For major version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade,
 # see the 'download_panos_image.yml' playbook.
 #
-# Connection details for the device must be specified in the 'device' variable, see 'vars.yml'.
+# Connection details for the device must be specified in the 'device' variable.
 #
 # Modules Used
 # ============
