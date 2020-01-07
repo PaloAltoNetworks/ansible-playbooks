@@ -6,6 +6,10 @@
 #
 # Quick examples of how to use the 'panos_security_rule' module to create security rules on a PAN-OS device.
 #
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
+#
 # Modules Used
 # ============
 #

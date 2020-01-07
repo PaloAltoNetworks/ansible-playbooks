@@ -6,8 +6,9 @@
 #
 # Upgrades the content version on a PAN-OS device or HA pair.
 #
-# Connection details for the device (or the primary member of a HA pair) must be specified in the 'device' host 
-# variable.
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
 #
 # Usage
 # =====

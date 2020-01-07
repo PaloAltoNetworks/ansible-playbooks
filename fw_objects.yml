@@ -8,6 +8,9 @@
 # appropriate PAN-OS Ansible modules.  These tasks use the Ansible 'with_items' keyword for looping
 # (https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#iterating-over-a-list-of-hashes).
 #
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
 #
 # Modules Used
 # ============
