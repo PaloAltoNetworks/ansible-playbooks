@@ -8,10 +8,9 @@
 # version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the 
 # 'download_panos_image.yml' playbook.
 #
-# This playbook requires connection details for the primary device to be specified in the variables
-# 'primary_ip_address', 'primary_username', and 'primary_password'.  Connection details for the secondary device
-# should be specified in the variables 'secondary_ip_address', 'secondary_username', 'secondary_password'.
-# These may be defined as host variables (see `host_vars/ha_pair.yml` for an example) or extra vars.
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
+# 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
+# (see `host_vars/ha_pair.yml` for an example) or extra vars.
 #
 # Usage
 # =====
@@ -39,15 +38,15 @@
   vars:
     primary:
       ip_address: '{{ primary_ip_address }}'
-      username: '{{ primary_username | default(omit) }}'
-      password: '{{ primary_password | default(omit) }}'
-      api_key: '{{ primary_api_key | default(omit) }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     secondary:
       ip_address: '{{ secondary_ip_address }}'
-      username: '{{ secondary_username | default(omit) }}'
-      password: '{{ secondary_password | default(omit) }}'
-      api_key: '{{ secondary_api_key | default(omit) }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     # backup_config - Create a backup of the currently running config before upgrading on both devices.
     backup_config: true
