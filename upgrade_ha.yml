@@ -8,8 +8,9 @@
 # version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the 
 # 'download_panos_image.yml' playbook.
 #
-# Connection details for both members of the HA pair must be specified in the 'primary' and 'secondary' host variables
-# for the target host, or overridden using the `--extra-vars` command line option.
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
+# 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
+# (see `host_vars/ha_pair.yml` for an example) or extra vars.
 #
 # Usage
 # =====
@@ -35,6 +36,18 @@
   connection: local
 
   vars:
+    primary:
+      ip_address: '{{ primary_ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
+    secondary:
+      ip_address: '{{ secondary_ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
     # backup_config - Create a backup of the currently running config before upgrading on both devices.
     backup_config: true
 

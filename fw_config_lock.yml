@@ -7,6 +7,10 @@
 # Quick example of how to handle PAN-OS automatic config locks.  This uses the Ansible 'retries' keyword to wait until
 # there are no active config locks before continuing.
 #
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
+#
 # Modules Used
 # ============
 #
@@ -21,6 +25,12 @@
   connection: local
 
   vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
     vsys: vsys1
 
   roles:
