@@ -35,6 +35,12 @@
   connection: local
 
   vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
     # backup_config - Create a backup of the currently running config.
     backup_config: true
 

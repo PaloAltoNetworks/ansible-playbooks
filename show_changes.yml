@@ -21,6 +21,13 @@
   connection: local
   gather_facts: false
 
+  vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
   roles:
     - PaloAltoNetworks.paloaltonetworks
 

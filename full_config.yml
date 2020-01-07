@@ -3,6 +3,12 @@
   connection: local
 
   vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
     interfaces:
       - if_name: 'ethernet1/1'
         mode: 'layer3'

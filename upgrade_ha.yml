@@ -35,6 +35,18 @@
   connection: local
 
   vars:
+    primary:
+      ip_address: '{{ primary_ip_address }}'
+      username: '{{ primary_username | default(omit) }}'
+      password: '{{ primary_password | default(omit) }}'
+      api_key: '{{ primary_api_key | default(omit) }}'
+
+    secondary:
+      ip_address: '{{ secondary_ip_address }}'
+      username: '{{ secondary_username | default(omit) }}'
+      password: '{{ secondary_password | default(omit) }}'
+      api_key: '{{ secondary_api_key | default(omit) }}'
+
     # backup_config - Create a backup of the currently running config before upgrading on both devices.
     backup_config: true
 
