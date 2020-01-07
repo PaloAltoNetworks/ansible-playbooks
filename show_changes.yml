@@ -7,6 +7,10 @@
 # This issues the 'show config list changes' command to display the modified config elements in the candidate config
 # using 'panos_op', and issues the commit command if there are uncommitted changes.
 #
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
+#
 # Modules Used
 # ============
 #
@@ -20,6 +24,13 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
   gather_facts: false
+
+  vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
   roles:
     - PaloAltoNetworks.paloaltonetworks

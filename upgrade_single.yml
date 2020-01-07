@@ -8,7 +8,9 @@
 # For major version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade,
 # see the 'download_panos_image.yml' playbook.
 #
-# Connection details for the device must be specified in the 'device' variable.
+# This playbook requires connection details for the deivce to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
 #
 # Modules Used
 # ============
@@ -35,6 +37,12 @@
   connection: local
 
   vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
     # backup_config - Create a backup of the currently running config.
     backup_config: true
 
