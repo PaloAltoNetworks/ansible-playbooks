@@ -1,5 +1,10 @@
 creds.yml
 
+prod
+prod_creds.yml
+
+*-session_report.txt
+
 *.retry
 **/venv/*
 **/.vscode/*
