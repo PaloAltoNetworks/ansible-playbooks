@@ -1,5 +1,5 @@
+creds.yml
+
 *.retry
-
 **/venv/*
-
 **/.vscode/*
