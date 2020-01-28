@@ -1,0 +1,35 @@
+---
+# download_panos_version.yml - Downloads a PAN-OS version to a device.
+#
+# Description
+# ===========
+#
+# Downloads a specific PAN-OS version to a device.  Useful for major version upgrades where a new base PAN-OS version
+# needs to be downloaded to the device (i.e. 8.1.12 -> 9.0.5).
+#
+# Connection details for the device must be specified in the 'device' variable, see `host_vars/firewall.yml`.
+# Required variables:
+#
+# Usage
+# =====
+#
+#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
+#           definition of host variables.
+#
+#   target_version: Target version for upgrade.
+
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
+
+  roles:
+    - PaloAltoNetworks.paloaltonetworks
+
+  tasks:
+    - name: Download target PAN-OS version
+      panos_software:
+        provider: '{{ device }}'
+        version: '{{ target_version }}'
+        download: true
+        install: false
+        restart: false
+

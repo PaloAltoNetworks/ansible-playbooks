@@ -59,8 +59,8 @@
     #                     upgrading the secondary firewall.
     pause_mid_upgrade: False
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
+  # roles:
+  #   - PaloAltoNetworks.paloaltonetworks
 
   tasks:
     - name: Backup device config (primary)
@@ -75,36 +75,13 @@
         cmd: 'save config to {{ backup_filename }}'
       when: backup_config|bool
 
-    - name: Check for software updates (primary)
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'request system software check'
-
-    - name: Check for software updates (secondary)
-      panos_op:
-        provider: '{{ secondary }}'
-        cmd: 'request system software check'
-
     - name: Download target PAN-OS version
-      panos_op:
+      panos_software:
         provider: '{{ primary }}'
-        cmd: |
-          <request><system><software><download>
-          <sync-to-peer>yes</sync-to-peer>
-          <version>{{ target_version }}</version>
-          </download></software></system></request>
-        cmd_is_xml: true
-      register: target_download
-
-    - name: Poll for target PAN-OS version download
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (target_download.stdout | from_json).response.result.job }}'
-      register: target_download_job
-      retries: 10
-      delay: 60
-      when: target_download is not failed
-      until: ( target_download_job.stdout | from_json).response.result.job.result == 'OK'
+        version: '{{ target_version }}'
+        download: true
+        sync_to_peer: true
+        install: false
 
     - name: Suspend primary device
       panos_op:
@@ -122,26 +99,12 @@
              ( secondary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
              ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested' # yamllint disable-line
 
-    - name: Install target PAN-OS version (primary)
-      panos_op:
+    - name: Install target PAN-OS version and restart (primary)
+      panos_software:
         provider: '{{ primary }}'
-        cmd: 'request system software install version {{ target_version }}'
-      register: primary_install
-
-    - name: Poll for target PAN-OS version install (primary)
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'show jobs id {{ (primary_install.stdout | from_json).response.result.job }}'
-      register: primary_install_job
-      retries: 10
-      delay: 30
-      when: primary_install is not failed
-      until: ( primary_install_job.stdout | from_json).response.result.job.result == 'OK'
-
-    - name: Reboot primary
-      panos_op:
-        provider: '{{ primary }}'
-        cmd: 'request restart system'
+        version: '{{ target_version }}'
+        download: false
+        restart: true
 
     - pause:
         seconds: 30
@@ -186,27 +149,12 @@
              ( primary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
              ( primary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested'
 
-
-    - name: Install target PAN-OS version (secondary)
-      panos_op:
+    - name: Install target PAN-OS version and restart (secondary)
+      panos_software:
         provider: '{{ secondary }}'
-        cmd: 'request system software install version {{ target_version }}'
-      register: secondary_install
-
-    - name: Poll for target PAN-OS version install (secondary)
-      panos_op:
-        provider: '{{ secondary }}'
-        cmd: 'show jobs id {{ (secondary_install.stdout | from_json).response.result.job }}'
-      register: secondary_install_job
-      retries: 10
-      delay: 60
-      when: secondary_install is not failed
-      until: ( secondary_install_job.stdout | from_json).response.result.job.result == 'OK'
-
-    - name: Reboot secondary
-      panos_op:
-        provider: '{{ secondary }}'
-        cmd: 'request restart system'
+        version: '{{ target_version }}'
+        download: false
+        restart: true
 
     - pause:
         seconds: 30
