@@ -1,0 +1,29 @@
+---
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
+
+  vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+
+    session_min_age: 86400
+
+  roles:
+    - PaloAltoNetworks.paloaltonetworks
+
+  tasks:
+    - name: Run show session all command
+      panos_op:
+        provider: '{{ device }}'
+        cmd: '<show><session><all><filter><min-age>{{ session_min_age }}</min-age></filter></all></session></show>'
+        cmd_is_xml: True
+      register: result
+
+    - name: Output list of sessions to file
+      template:
+        src: session_report.j2
+        dest: '{{ ip_address }}-{{ ansible_date_time.iso8601 }}-session_report.txt'
+      vars:
+        sessions: '{{ (result.stdout | from_json).response.result.entry }}'

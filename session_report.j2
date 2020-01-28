@@ -1,0 +1,13 @@
+{% for session in sessions %}
+Session ID: {{ session.idx }}
+Start Time: {{ session['start-time'] }}
+Source Zone: {{ session.from }}
+Source: {{ session.source }}
+Source Port: {{ session.sport }}
+Destination Zone: {{ session.to }}
+Destination: {{ session.dst }}
+Destination Port: {{ session.dport }}
+Application: {{ session.application }}
+Security Rule: {{ session['security-rule'] }}
+
+{% endfor %}
