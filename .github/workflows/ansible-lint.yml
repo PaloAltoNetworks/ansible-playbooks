@@ -21,5 +21,8 @@ jobs:
       - name: Install ansible-lint
         run: pip install ansible-lint
 
+      - name: Install PaloAltoNetworks.paloaltonetworks Galaxy role
+        run: ansible-galaxy install -r roles/requirements.yml
+
       - name: Run ansible-lint
         run: ansible-lint *.yml
