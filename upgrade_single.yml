@@ -65,7 +65,8 @@
         version: '{{ target_version }}'
         restart: true
 
-    - pause:
+    - name: Pause for restart
+      pause:
         seconds: 30
 
     - name: Check to see if device is ready

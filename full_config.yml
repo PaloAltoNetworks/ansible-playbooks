@@ -105,7 +105,7 @@
         snat_interface: 'ethernet1/2'
         dnat_address: 'web-srv'
         dnat_port: '22'
-      
+
       - rule_name: 'DB SSH'
         source_zone: ['untrust']
         source_ip: ['any']
