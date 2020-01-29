@@ -1,0 +1,20 @@
+name: ansible-lint
+on:
+  push:
+  schedule:
+    - cron: '0 0 1 * *'
+
+jobs:
+  lint:
+    name: ansible-lint
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v2
+
+      - name: Install ansible-lint
+        run: pip install ansible-lint
+
+      - name: Run ansible-lint
+        run: ansible-lint *.yml
