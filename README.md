@@ -1,6 +1,6 @@
 # ansible-pan-samples
 
-![ansible-lint](https://github.com/mrichardson03/ansible-pan-samples/workflows/ansible-lint/badge.svg)
+![ansible-lint](https://github.com/mrichardson03/ansible-pan-samples/workflows/ansible-lint/badge.svg)[https://github.com/mrichardson03/ansible-pan-samples/actions?query=workflow%3Aansible-lint]
 
 Example Ansible playbooks using the Palo Alto Networks [modules](https://ansible-pan.rtfd.io), and what you'll need to
 get started writing your own.  I try to add interesting things to this repository over time based on customer
