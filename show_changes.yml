@@ -32,12 +32,9 @@
       password: '{{ password | default(omit) }}'
       api_key: '{{ api_key | default(omit) }}'
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Check for pending changes
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'show config list changes'
       register: changes
@@ -46,7 +43,7 @@
         msg: '{{ changes.stdout | from_json }}'
 
     - name: Commit changes if needed
-      panos_commit:
+      paloaltonetworks.panos.panos_commit:
         provider: '{{ device }}'
       when: >
         (changes.stdout | from_json).response.result.journal is defined and

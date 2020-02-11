@@ -30,12 +30,9 @@
       password: '{{ password | default(omit) }}'
       api_key: '{{ api_key | default(omit) }}'
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Create first security rule
-      panos_security_rule:
+      paloaltonetworks.panos.panos_security_rule:
         provider: '{{ device }}'
         rule_name: 'Prod SSH Inbound'
         source_zone: ['untrust']
@@ -49,7 +46,7 @@
         commit: false
 
     - name: Create second security rule
-      panos_security_rule:
+      paloaltonetworks.panos.panos_security_rule:
         provider: '{{ device }}'
         rule_name: 'SI Inbound'
         source_zone: ['untrust']

@@ -40,12 +40,9 @@
     service:
       - 'application-default'
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Create security rule via extra_vars
-      panos_security_rule:
+      paloaltonetworks.panos.panos_security_rule:
         provider: '{{ device }}'
         rule_name: '{{ rule_name }}'
         source_zone: '{{ source_zone }}'

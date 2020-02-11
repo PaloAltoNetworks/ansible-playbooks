@@ -31,12 +31,9 @@
       password: '{{ password | default(omit) }}'
       api_key: '{{ api_key | default(omit) }}'
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Check to see if device is ready
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'show chassis-ready'
       changed_when: false

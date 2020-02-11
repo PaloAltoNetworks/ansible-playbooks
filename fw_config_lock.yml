@@ -33,12 +33,9 @@
 
     vsys: vsys1
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Wait for config lock
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: '<show><config-locks><vsys>{{ vsys }}</vsys></config-locks></show>'
         cmd_is_xml: true
@@ -48,7 +45,7 @@
       until: result.stdout_xml == '<response status="success"><result><config-locks /></result></response>'
 
     - name: Acquire config lock
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: '<request><config-lock><add><comment>Ansible config lock</comment></add></config-lock></request>'
         cmd_is_xml: true
@@ -57,7 +54,7 @@
         msg: 'Configuration would be changed here'
 
     - name: Release config lock
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: '<request><config-lock><remove></remove></config-lock></request>'
         cmd_is_xml: true

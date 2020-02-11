@@ -49,18 +49,15 @@
     # backup_filename - Filename for running config backup.
     backup_filename: 'ansible-backup-{{ ansible_date_time.date }}.xml'
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Backup device config
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'save config to {{ backup_filename }}'
       when: backup_config|bool
 
     - name: Install target PAN-OS version
-      panos_software:
+      paloaltonetworks.panos.panos_software:
         provider: '{{ device }}'
         version: '{{ target_version }}'
         restart: true
@@ -70,7 +67,7 @@
         seconds: 30
 
     - name: Check to see if device is ready
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'show chassis-ready'
       changed_when: false

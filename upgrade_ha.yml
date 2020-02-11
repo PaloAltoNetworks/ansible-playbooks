@@ -59,24 +59,21 @@
     #                     upgrading the secondary firewall.
     pause_mid_upgrade: False
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Backup device config (primary)
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ primary }}'
         cmd: 'save config to {{ backup_filename }}'
       when: backup_config|bool
 
     - name: Backup device config (secondary)
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ secondary }}'
         cmd: 'save config to {{ backup_filename }}'
       when: backup_config|bool
 
     - name: Download target PAN-OS version
-      panos_software:
+      paloaltonetworks.panos.panos_software:
         provider: '{{ primary }}'
         version: '{{ target_version }}'
         download: true
@@ -84,12 +81,12 @@
         install: false
 
     - name: Suspend primary device
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ primary }}'
         cmd: 'request high-availability state suspend'
 
     - name: Check that secondary is now active
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ secondary }}'
         cmd: 'show high-availability state'
       register: secondary_active
@@ -100,7 +97,7 @@
              ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested' # yamllint disable-line
 
     - name: Install target PAN-OS version and restart (primary)
-      panos_software:
+      paloaltonetworks.panos.panos_software:
         provider: '{{ primary }}'
         version: '{{ target_version }}'
         download: false
@@ -111,7 +108,7 @@
         seconds: 30
 
     - name: Chassis ready (primary)
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ primary }}'
         cmd: 'show chassis-ready'
       changed_when: false
@@ -121,7 +118,7 @@
       delay: 60
 
     - name: State sync check (primary)
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ primary }}'
         cmd: 'show high-availability state'
       register: primary_state_sync
@@ -136,12 +133,12 @@
       when: pause_mid_upgrade
 
     - name: Suspend secondary device
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ secondary }}'
         cmd: 'request high-availability state suspend'
 
     - name: Check that primary is now active
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ primary }}'
         cmd: 'show high-availability state'
       register: primary_active
@@ -152,7 +149,7 @@
              ( primary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested'
 
     - name: Install target PAN-OS version and restart (secondary)
-      panos_software:
+      paloaltonetworks.panos.panos_software:
         provider: '{{ secondary }}'
         version: '{{ target_version }}'
         download: false
@@ -163,7 +160,7 @@
         seconds: 30
 
     - name: Chassis ready (secondary)
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ secondary }}'
         cmd: 'show chassis-ready'
       changed_when: false
@@ -173,7 +170,7 @@
       delay: 60
 
     - name: State sync check (secondary)
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ secondary }}'
         cmd: 'show high-availability state'
       register: secondary_state_sync

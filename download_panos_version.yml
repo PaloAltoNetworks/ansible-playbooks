@@ -21,12 +21,9 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Download target PAN-OS version
-      panos_software:
+      paloaltonetworks.panos.panos_software:
         provider: '{{ device }}'
         version: '{{ target_version }}'
         download: true

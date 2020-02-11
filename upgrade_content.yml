@@ -38,19 +38,16 @@
 
     sync_to_peer: False
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Check latest content
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'request content upgrade check'
       register: check
       changed_when: False
 
     - name: Download latest content
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: |
           <request><content><upgrade><download>
@@ -61,7 +58,7 @@
       register: download
 
     - name: Check content download result
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'show jobs id {{ (download.stdout | from_json).response.result.job }}'
       register: download_job
@@ -70,7 +67,7 @@
       delay: 60
 
     - name: Install latest content
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: |
           <request><content><upgrade><install>
@@ -81,7 +78,7 @@
       register: install
 
     - name: Check content install result
-      panos_op:
+      paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'show jobs id {{ (install.stdout | from_json).response.result.job }}'
       register: install_job
