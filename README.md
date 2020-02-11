@@ -22,7 +22,7 @@ instructions for popular choices:
 Install direct from Ansible:
 
 ```
-$ sudo rpm install -i https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.8.5-1.el7.ans.noarch.rpm
+$ sudo rpm install -i https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.9.4-1.el7.ans.noarch.rpm
 ```
 
 #### Ubuntu 18.04
