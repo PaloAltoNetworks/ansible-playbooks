@@ -128,12 +128,9 @@
         dnat_address: 'web-srv'
         dnat_port: '80'
 
-  roles:
-    - PaloAltoNetworks.paloaltonetworks
-
   tasks:
     - name: Configure interfaces
-      panos_interface:
+      paloaltonetworks.panos.panos_interface:
         provider: '{{ device }}'
         template: '{{ template | default(omit) }}'
         if_name: '{{ item.if_name }}'
@@ -145,7 +142,7 @@
       tags: network
 
     - name: Configure zones
-      panos_zone:
+      paloaltonetworks.panos.panos_zone:
         provider: '{{ device }}'
         template: '{{ template | default(omit) }}'
         zone: '{{ item.zone }}'
@@ -155,7 +152,7 @@
       tags: network
 
     - name: Configure virtual router
-      panos_virtual_router:
+      paloaltonetworks.panos.panos_virtual_router:
         provider: '{{ device }}'
         template: '{{ template | default(omit) }}'
         name: 'default'
@@ -164,7 +161,7 @@
       tags: network
 
     - name: Configure static route
-      panos_static_route:
+      paloaltonetworks.panos.panos_static_route:
         provider: '{{ device }}'
         template: '{{ template | default(omit) }}'
         virtual_router: 'default'
@@ -174,7 +171,7 @@
       tags: network
 
     - name: Create address objects
-      panos_address_object:
+      paloaltonetworks.panos.panos_address_object:
         provider: '{{ device }}'
         device_group: '{{ device_group | default(omit) }}'
         name: '{{ item.name }}'
@@ -184,7 +181,7 @@
       tags: objects
 
     - name: Create service objects
-      panos_service_object:
+      paloaltonetworks.panos.panos_service_object:
         provider: '{{ device }}'
         device_group: '{{ device_group|default(omit) }}'
         name: '{{ item.name }}'
@@ -195,7 +192,7 @@
       tags: objects
 
     - name: Create security rules
-      panos_security_rule:
+      paloaltonetworks.panos.panos_security_rule:
         provider: '{{ device }}'
         device_group: '{{ device_group | default(omit) }}'
         rule_name: '{{ item.rule_name }}'
@@ -211,7 +208,7 @@
       tags: security_rules
 
     - name: Create inbound NAT rules
-      panos_nat_rule:
+      paloaltonetworks.panos.panos_nat_rule:
         provider: '{{ device }}'
         device_group: '{{ device_group | default(omit) }}'
         rule_name: '{{ item.rule_name }}'
@@ -229,7 +226,7 @@
       tags: nat_rules
 
     - name: Create outbound NAT rule
-      panos_nat_rule:
+      paloaltonetworks.panos.panos_nat_rule:
         provider: '{{ device }}'
         device_group: '{{ device_group | default(omit) }}'
         rule_name: 'Outbound NAT'
@@ -243,7 +240,7 @@
       tags: nat_rules
 
     - name: Commit the candidate configuration
-      panos_commit:
+      paloaltonetworks.panos.panos_commit:
         provider: '{{ device }}'
         device_group: '{{ device_group | default(omit) }}'
         include_template: '{{ template | default(omit) }}'

@@ -22,7 +22,7 @@ instructions for popular choices:
 Install direct from Ansible:
 
 ```
-$ sudo rpm install -i https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.8.5-1.el7.ans.noarch.rpm
+$ sudo rpm install -i https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.9.4-1.el7.ans.noarch.rpm
 ```
 
 #### Ubuntu 18.04
@@ -49,12 +49,12 @@ $ export PATH=$PATH:$HOME/Library/Python/2.7/bin
 
 You'll want to permanently modify the PATH in your shell's config file as well.
 
-### Installing Palo Alto Networks Role
+### Installing PAN-OS Collection
 
-Once you're done with installing Ansible, install the Palo Alto Networks role from Ansible Galaxy:
+Once you're done with installing Ansible, install the PAN-OS collection from Ansible Galaxy:
 
 ```
-$ ansible-galaxy install PaloAltoNetworks.paloaltonetworks
+$ ansible-galaxy collection install -r collections/requirements.yml
 ```
 
 You're now ready to start using these playbooks.
