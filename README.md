@@ -65,6 +65,7 @@ You can use these playbooks as a base by cloning this repository.  Each of them 
 `ansible-playbook` and their customization options.
 
 * check_ready.yml - Checks to see if a firewall is ready via 'show chassis-ready' command.
+* download_panos_version.yml - Downloads a PAN-OS version to a device.
 * fw_config_lock.yml - Handle firewall config locking.
 * fw_objects.yml - Create various objects on a PAN-OS device.
 * fw_rule_survey.yml - Add security rule via Ansible Tower survey.
