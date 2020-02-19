@@ -19,13 +19,13 @@
 #
 #   target: Target HA pair.  See `host_vars/ha_pair.yml` for sample definition of host variables.
 #
-#   target_version: Target version for upgrade.
+#   version: Version to install.
 #
 # See the VARS section of the playbook for additional customization options.
 #
 # Default run:
 #
-#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=ha_pair target_version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=ha_pair version=9.0.3-h3"
 #
 # Notes
 # =====

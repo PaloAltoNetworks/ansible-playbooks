@@ -16,7 +16,7 @@
 #   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
 #           definition of host variables.  Default value is 'firewall'.
 #
-#   target_version: Target version for upgrade.
+#   version: Version to download to device.
 #
 #   sync_to_peer: If the target PAN-OS device is a member of an HA pair, perform actions on the peer device as well.
 #                 Default value is 'false'.
@@ -37,7 +37,7 @@
     - name: Download target PAN-OS version
       paloaltonetworks.panos.panos_software:
         provider: '{{ device }}'
-        version: '{{ target_version }}'
+        version: '{{ version }}'
         sync_to_peer: '{{ sync_to_peer }}'
         download: true
         install: false

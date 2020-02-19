@@ -25,13 +25,13 @@
 #   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
 #           definition of host variables.
 #
-#   target_version: Target version for upgrade.
+#   version: Version to install.
 #
 # See the VARS section of the playbook for additional customization options.
 #
 # Default run (maintenance release upgrade):
 #
-#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=firewall target_version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=firewall version=9.0.3-h3"
 
 - hosts: '{{ target | default("firewall") }}'
   connection: local
