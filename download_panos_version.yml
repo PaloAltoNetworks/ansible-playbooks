@@ -31,12 +31,14 @@
       password: '{{ password | default(omit) }}'
       api_key: '{{ api_key | default(omit) }}'
 
+    sync_to_peer: False
+
   tasks:
     - name: Download target PAN-OS version
       paloaltonetworks.panos.panos_software:
         provider: '{{ device }}'
         version: '{{ target_version }}'
-        sync_to_peer: '{{ sync_to_peer | default(false) }}'
+        sync_to_peer: '{{ sync_to_peer }}'
         download: true
         install: false
         restart: false
