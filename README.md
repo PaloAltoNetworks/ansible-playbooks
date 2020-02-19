@@ -75,7 +75,9 @@ You can use these playbooks as a base by cloning this repository.  Each of them 
 * show_changes.yml - Checks for uncommitted changes and commits if necessary.
 * upgrade_content.yml - Upgrade the content version on a PAN-OS device.
 * upgrade_ha.yml - PAN-OS HA pair upgrade playbook.
+* upgrade_ha_major.yml - PANOS HA pair major version upgrade playbook.
 * upgrade_single.yml - PAN-OS single firewall upgrade playbook.
+* upgrade_single_major.yml - PAN-OS single firewall major version upgrade playbook.
 
 ## Support Policy
 

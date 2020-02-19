@@ -1,0 +1,44 @@
+---
+# upgrade_single_major.yml - PAN-OS single firewall major version upgrade playbook.
+#
+# Description
+# ===========
+#
+# Performs a major version upgrade (i.e. 8.1.12 -> 9.0.5) on a single PAN-OS device.  This playbook simply imports the
+# other playbooks in this repository making up the parts of this process (content upgrade, download base image, install
+# target version).
+#
+# This playbook requires connection details for the deivce to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
+#
+# Usage
+# =====
+#
+# Required variables:
+#
+#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample
+#           definition of host variables.
+#
+#   base_version: Base version downloaded to the device.  This version is not installed (for example, the 9.0.0 base
+#                 image in the 8.1.12 -> 9.0.5 upgrade process).
+#
+#   target_version: Version of PAN-OS to ultimately install on the device (for example, 9.0.5 in the 8.1.12 -> 9.0.5 
+#                   upgrade process).
+#
+# See the VARS section of the playbook for additional customization options.
+#
+# Default run:
+#
+#  $ ansible-playbook -i inventory upgrade_single_major.yml --extra-vars "target=firewall base_version=9.0.0 target_version=9.0.5"
+#
+
+- import_playbook: upgrade_content.yml
+
+- import_playbook: download_panos_version.yml
+  vars:
+    version: '{{ base_version }}'
+
+- import_playbook: upgrade_single.yml
+  vars:
+    version: '{{ target_version }}'
