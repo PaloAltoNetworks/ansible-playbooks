@@ -1,5 +1,5 @@
 ---
-# upgrade_content.yml - PAN-OS content upgrade playbook.
+# upgrade_content.yml - Upgrade the content version on a PAN-OS device.
 #
 # Description
 # ===========
