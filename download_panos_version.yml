@@ -7,25 +7,36 @@
 # Downloads a specific PAN-OS version to a device.  Useful for major version upgrades where a new base PAN-OS version
 # needs to be downloaded to the device (i.e. 8.1.12 -> 9.0.5).
 #
-# Connection details for the device must be specified in the 'device' variable, see `host_vars/firewall.yml`.
-# Required variables:
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or extra vars.
 #
 # Usage
 # =====
 #
 #   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
-#           definition of host variables.
+#           definition of host variables.  Default value is 'firewall'.
 #
 #   target_version: Target version for upgrade.
+#
+#   sync_to_peer: If the target PAN-OS device is a member of an HA pair, perform actions on the peer device as well.
+#                 Default value is 'false'.
 
 - hosts: '{{ target | default("firewall") }}'
   connection: local
+
+  vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
   tasks:
     - name: Download target PAN-OS version
       paloaltonetworks.panos.panos_software:
         provider: '{{ device }}'
         version: '{{ target_version }}'
+        sync_to_peer: '{{ sync_to_peer | default(false) }}'
         download: true
         install: false
         restart: false
