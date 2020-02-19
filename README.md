@@ -71,6 +71,7 @@ You can use these playbooks as a base by cloning this repository.  Each of them 
 * fw_rule_survey.yml - Add security rule via Ansible Tower survey.
 * fw_rules.yml - Create security rules on a PAN-OS device.
 * fw_shutdown.yml - Shuts down a PAN-OS device.
+* session_report.yml - Generates a report on long sessions.
 * show_changes.yml - Checks for uncommitted changes and commits if necessary.
 * upgrade_ha.yml - PAN-OS HA pair upgrade playbook.
 * upgrade_single.yml - PAN-OS single firewall upgrade playbook.

@@ -1,12 +1,36 @@
 ---
+# session_report.yml - Generates a report on long sessions.
+#
+# Description
+# ===========
+#
+# Uses the 'show session all' op command to show sessions older than the `session_min_age` variable.  This playbook
+# also uses the JSON output from the `panos_op` module to process the response from the firewall, and the Ansible
+# 'template' module to write a report to the current directory.
+#
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
+#
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory session_report.yml
+
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
   vars:
     device:
       ip_address: '{{ ip_address }}'
-      username: '{{ username }}'
-      password: '{{ password }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     session_min_age: 86400
 
