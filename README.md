@@ -59,16 +59,6 @@ $ ansible-galaxy collection install -r collections/requirements.yml
 
 You're now ready to start using these playbooks.
 
-## Another Option: VS Code Remote - Container Extension
-
-This repository also contains a configuration for the
-[VS Code Remote - Container Extension](https://code.visualstudio.com/docs/remote/containers), making getting started
-even easier.
-
-Follow the extension's instructions for installation (you'll install Docker Desktop along the way), then clone this
-repository and open it in VS Code.  It will create and run a Docker container with Ansible and the Palo Alto Networks
-role installed, and you'll be ready to go.
-
 ## Sample Playbooks
 
 You can use these playbooks as a base by cloning this repository.  Each of them is documented with how to run them via
