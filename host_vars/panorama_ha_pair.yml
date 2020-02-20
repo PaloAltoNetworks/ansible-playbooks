@@ -1,0 +1,7 @@
+---
+# Connection details for the primary and secondary members of the HA pair.
+primary_ip_address: '192.168.55.51'
+secondary_ip_address: '192.168.55.52'
+
+# All other playbooks in this repository connect to 'ip_address', so define that as the primary device.
+ip_address: '{{ primary_ip_address }}'
