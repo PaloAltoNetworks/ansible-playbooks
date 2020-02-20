@@ -1,5 +1,5 @@
 ---
-# upgrade_single.yml - PAN-OS single firewall or Panorama upgrade playbook.
+# upgrade_single.yml - PAN-OS single firewall upgrade playbook.
 #
 # Description
 # ===========

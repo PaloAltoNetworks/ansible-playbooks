@@ -77,8 +77,9 @@ You can use these playbooks as a base by cloning this repository.  Each of them 
 * upgrade_ha.yml - PAN-OS HA pair upgrade playbook.
 * upgrade_ha_major.yml - PAN-OS HA pair major version upgrade playbook.
 * upgrade_panorama_ha.yml - Panorama HA upgrade playbook.
-* upgrade_single.yml - PAN-OS single firewall or Panorama upgrade playbook.
-* upgrade_single_major.yml - PAN-OS single firewall or Panorama major version upgrade playbook.
+* upgrade_panorama_ha_major.yml - Panorama HA major version upgrade playbook.
+* upgrade_single.yml - PAN-OS single firewall upgrade playbook.
+* upgrade_single_major.yml - PAN-OS single firewall major version upgrade playbook.
 
 ## Support Policy
 

@@ -58,6 +58,10 @@
     #                     upgrading the secondary firewall.
     pause_mid_upgrade: False
 
+    # major_version_upgrade - Handles special case when one Panorama is on a different major version.  Should only be
+    #                         set to true when performing a major version upgrade.
+    major_version_upgrade: False
+
   tasks:
     - name: Backup device config (primary)
       paloaltonetworks.panos.panos_op:
@@ -117,6 +121,21 @@
              (primary_passive.stdout | from_json).response.result.enabled == 'yes' and
              (primary_passive.stdout | from_json).response.result["local-info"].state == 'primary-passive' and
              (primary_passive.stdout | from_json).response.result["running-sync"] == 'synchronized'
+      when: not major_version_upgrade|bool
+
+    # Special case, Panorama HA doesn't work across major versions like firewalls, so primary will be non-functional.
+    - name: Check that primary is up and non-functional
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ primary }}'
+        cmd: 'show high-availability state'
+      register: primary_nf
+      retries: 30
+      delay: 60
+      until: primary_nf is not failed and
+             (primary_nf.stdout | from_json).response.result.enabled == 'yes' and
+             (primary_nf.stdout | from_json).response.result["local-info"].state == 'primary-non-functional' and
+             (primary_nf.stdout | from_json).response.result["local-info"]["state-reason"] == 'Peer version not compatible'
+      when: major_version_upgrade|bool
 
     - name: Pause for verification
       pause:
