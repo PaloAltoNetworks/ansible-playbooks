@@ -34,7 +34,7 @@
     sync_to_peer: False
 
   tasks:
-    - name: Download target PAN-OS version
+    - name: Download PAN-OS version
       paloaltonetworks.panos.panos_software:
         provider: '{{ device }}'
         version: '{{ version }}'

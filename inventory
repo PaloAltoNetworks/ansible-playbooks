@@ -2,3 +2,4 @@ firewall
 ha_pair
 
 panorama
+panorama_ha_pair

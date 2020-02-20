@@ -1,0 +1,51 @@
+---
+# upgrade_panorama_ha_major.yml - Panorama HA pair major version upgrade playbook.
+#
+# Description
+# ===========
+#
+# Performs a major version upgrade (i.e. 8.1.12 -> 9.0.5) on a Panorama HA pair.  This playbook simply imports the other
+# playbooks in this repository making up the parts of this process (content upgrade, download base image, install
+# target version).
+#
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
+# 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
+# (see `host_vars/panorama_ha_pair.yml` for an example) or extra vars.
+#
+# Usage
+# =====
+#
+# Required variables:
+#
+#   target: Target HA pair.  See `host_vars/panorama_ha_pair.yml` for sample definition of host variables.
+#
+#   base_version: Base version downloaded to both members of the HA pair.  This version is not installed
+#                 (for example, the 9.0.0 base image in the 8.1.12 -> 9.0.5 upgrade process).
+#
+#   target_version: Version of PAN-OS to ultimately install on both members of the HA pair
+#                   (for example, 9.0.5 in the 8.1.12 -> 9.0.5 upgrade process).
+#
+# See the VARS section of the playbook for additional customization options.
+#
+# Default run:
+#
+#  $ ansible-playbook -i inventory upgrade_panorama_ha_major.yml --extra-vars "target=panorama_ha_pair base_version=9.0.0 target_version=9.0.5"
+#
+# Notes
+# =====
+#
+# HA pairs with preemption enabled are not supported by these playbooks.
+
+- import_playbook: upgrade_content.yml
+  vars:
+    sync_to_peer: True
+
+- import_playbook: download_panos_version.yml
+  vars:
+    version: '{{ base_version }}'
+    sync_to_peer: True
+
+- import_playbook: upgrade_panorama_ha.yml
+  vars:
+    version: '{{ target_version }}'
+    major_version_upgrade: True

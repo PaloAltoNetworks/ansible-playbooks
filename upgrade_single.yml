@@ -31,7 +31,7 @@
 #
 # Default run (maintenance release upgrade):
 #
-#  $ ansible-playbook -i inventory upgrade_ha.yml --extra-vars "target=firewall version=9.0.3-h3"
+#  $ ansible-playbook -i inventory upgrade_single.yml --extra-vars "target=firewall version=9.0.3-h3"
 
 - hosts: '{{ target | default("firewall") }}'
   connection: local
@@ -59,7 +59,7 @@
     - name: Install target PAN-OS version
       paloaltonetworks.panos.panos_software:
         provider: '{{ device }}'
-        version: '{{ target_version }}'
+        version: '{{ version }}'
         restart: true
 
     - name: Pause for restart
