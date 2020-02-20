@@ -75,7 +75,7 @@
     - name: Download target PAN-OS version
       paloaltonetworks.panos.panos_software:
         provider: '{{ primary }}'
-        version: '{{ target_version }}'
+        version: '{{ version }}'
         download: true
         sync_to_peer: true
         install: false
@@ -99,7 +99,7 @@
     - name: Install target PAN-OS version and restart (primary)
       paloaltonetworks.panos.panos_software:
         provider: '{{ primary }}'
-        version: '{{ target_version }}'
+        version: '{{ version }}'
         download: false
         restart: true
 
@@ -151,7 +151,7 @@
     - name: Install target PAN-OS version and restart (secondary)
       paloaltonetworks.panos.panos_software:
         provider: '{{ secondary }}'
-        version: '{{ target_version }}'
+        version: '{{ version }}'
         download: false
         restart: true
 
