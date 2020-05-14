@@ -49,11 +49,13 @@ $ export PATH=$PATH:$HOME/Library/Python/2.7/bin
 
 You'll want to permanently modify the PATH in your shell's config file as well.
 
-### Installing PAN-OS Collection
+### Clone this repository, install PAN-OS Collection
 
-Once you're done with installing Ansible, install the PAN-OS collection from Ansible Galaxy:
+Once you're done with installing Ansible, clone this repo and install the PAN-OS collection from Ansible Galaxy:
 
 ```
+$ git clone https://github.com/mrichardson03/ansible-pan-samples.git
+$ cd ansible-pan-samples/
 $ ansible-galaxy collection install -r collections/requirements.yml
 ```
 
