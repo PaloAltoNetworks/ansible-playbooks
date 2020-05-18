@@ -1,0 +1,71 @@
+---
+# rule_hit_counter.yml - Checks to see if the hit counter is incrementing on a rule.
+#
+# Description
+# ===========
+#
+# Loops until the hit counter increments on a specific rule in the rule base.
+#
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
+#
+# Modules Used
+# ============
+#
+# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory check_ready.yml
+
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
+
+  vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
+    rule_name: 'Allow Ping'
+    vsys: 'vsys1'
+    rule_base: 'security'
+
+  tasks:
+    - name: Get initial hit count for rule
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: |
+          <show><rule-hit-count><vsys><vsys-name><entry name='{{ vsys }}'>
+          <rule-base><entry name='{{ rule_base }}'>
+          <rules><list><member>{{ rule_name }}</member></list></rules>
+          </entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>
+        cmd_is_xml: True
+      changed_when: false
+      register: initial
+
+    - name: Loop until hit counter has incremented on rule
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: |
+          <show><rule-hit-count><vsys><vsys-name><entry name='{{ vsys }}'>
+          <rule-base><entry name='{{ rule_base }}'>
+          <rules><list><member>{{ rule_name }}</member></list></rules>
+          </entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>
+        cmd_is_xml: True
+      changed_when: false
+      register: final
+      retries: 30
+      delay: 10
+      until: final is not failed and
+             ((final.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] | int) >
+             ((initial.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] | int)
+
+    - debug:
+        msg: "Initial count: {{ initial_count | int }}, final count: {{ final_count | int }}."
+      vars:
+        initial_count: '{{ (initial.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] }}'
+        final_count: '{{ (final.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] }}'
