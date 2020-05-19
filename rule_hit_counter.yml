@@ -18,7 +18,7 @@
 # Usage
 # =====
 #
-#   $ ansible-playbook -i inventory check_ready.yml
+#   $ ansible-playbook -i inventory rule_hit_counter.yml
 
 - hosts: '{{ target | default("firewall") }}'
   connection: local
