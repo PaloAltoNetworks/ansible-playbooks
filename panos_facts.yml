@@ -1,0 +1,40 @@
+---
+# panos_facts.yml - Gather data about a PAN-OS device.
+#
+# Description
+# ===========
+#
+# Uses the 'panos_facts' module to gather data about a PAN-OS device.
+#
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# extra vars.
+#
+# Modules Used
+# ============
+#
+# panos_facts - https://ansible-pan.readthedocs.io/en/latest/modules/panos_facts_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory panos_facts.yml
+
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
+
+  vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
+  tasks:
+    - name: Gather facts for device
+      paloaltonetworks.panos.panos_facts:
+        provider: '{{ device }}'
+
+    - debug:
+        msg: "Model: {{ ansible_facts['net_model'] }}, version: {{ ansible_facts['net_version'] }}"
+
