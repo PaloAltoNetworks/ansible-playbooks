@@ -36,27 +36,27 @@ $ sudo apt-add-repository --yes --update ppa:ansible/ansible
 $ sudo apt install ansible
 ```
 
-#### macOS 10.14
+#### macOS 10.15
 
 Install from Pip (Python package manager):
 
 ```
-$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-$ python get-pip.py --user
-$ pip install --user ansible
-$ export PATH=$PATH:$HOME/Library/Python/2.7/bin
+$ pip3 install --user ansible
+$ export PATH=$PATH:$HOME/Library/Python/3.7/bin
 ```
 
 You'll want to permanently modify the PATH in your shell's config file as well.
 
 ### Clone this repository, install PAN-OS Collection
 
-Once you're done with installing Ansible, clone this repo and install the PAN-OS collection from Ansible Galaxy:
+Once you're done with installing Ansible, clone this repo, and install the PAN-OS collection from Ansible Galaxy
+as well as the Python modules it depends on:
 
 ```
 $ git clone https://github.com/mrichardson03/ansible-pan-samples.git
 $ cd ansible-pan-samples/
 $ ansible-galaxy collection install -r collections/requirements.yml
+$ pip3 install --user -r requirements.txt
 ```
 
 You're now ready to start using these playbooks.
