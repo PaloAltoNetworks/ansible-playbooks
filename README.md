@@ -1,10 +1,11 @@
-# ansible-pan-samples
+# ansible-playbooks
 
-[![ansible-lint](https://github.com/mrichardson03/ansible-pan-samples/workflows/ansible-lint/badge.svg)](https://github.com/mrichardson03/ansible-pan-samples/actions?query=workflow%3Aansible-lint)
+[![ansible-lint](https://github.com/PaloAltoNetworks/ansible-playbooks/workflows/ansible-lint/badge.svg)](https://github.com/PaloAltoNetworks/ansible-playbooks/actions?query=workflow%3Aansible-lint)
 
-Example Ansible playbooks using the Palo Alto Networks [modules](https://ansible-pan.rtfd.io), and what you'll need to
-get started writing your own.  I try to add interesting things to this repository over time based on customer
-questions, so check back from time to time.
+Example Ansible playbooks using the Palo Alto Networks
+[Ansible Collection](https://github.com/PaloAltoNetworks/pan-os-ansible), and what you'll need to get started writing
+your own.  We try to add interesting things to this repository over time based on customer questions, so check back
+from time to time.
 
 ## Getting Started
 
@@ -14,18 +15,19 @@ First, you'll need to install Ansible on the machine that will execute your play
 control node can be as simple as a laptop, and can be running any Unix-like OS (Linux, BSD, macOS).
 
 You'll want to generally follow the
-[Ansible documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-the-control-node) for installing Ansible on your machine, but here are quick
-instructions for popular choices:
+[Ansible documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-the-control-node)
+for installing Ansible on your machine, but here are quick instructions for popular choices:
 
-#### CentOS 7
+#### CentOS
 
-Install direct from Ansible:
+Install from [EPEL](https://fedoraproject.org/wiki/EPEL):
 
 ```
-$ sudo rpm install -i https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.9.4-1.el7.ans.noarch.rpm
+$ sudo yum install epel-release
+$ sudo yum install ansible
 ```
 
-#### Ubuntu 18.04
+#### Ubuntu
 
 Install from the Ansible PPA:
 
@@ -53,8 +55,8 @@ Once you're done with installing Ansible, clone this repo, and install the PAN-O
 as well as the Python modules it depends on:
 
 ```
-$ git clone https://github.com/mrichardson03/ansible-pan-samples.git
-$ cd ansible-pan-samples/
+$ git clone https://github.com/PaloAltoNetworks/ansible-playbooks.git
+$ cd ansible-playbooks/
 $ ansible-galaxy collection install -r collections/requirements.yml
 $ pip3 install --user -r requirements.txt
 ```
