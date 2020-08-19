@@ -9,7 +9,7 @@
 # (https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#iterating-over-a-list-of-hashes).
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Modules Used
@@ -29,82 +29,144 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
+  collections:
+    - paloaltonetworks.panos
+
   vars:
     device:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username | default(omit) }}'
-      password: '{{ password | default(omit) }}'
-      api_key: '{{ api_key | default(omit) }}'
+      ip_address: "{{ ip_address }}"
+      username: "{{ username | default(omit) }}"
+      password: "{{ password | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
 
   tasks:
     - name: Create tag objects
-      paloaltonetworks.panos.panos_tag_object:
-        provider: '{{ device }}'
-        name: '{{ item.name }}'
-        color: '{{ item.color }}'
+      panos_tag_object:
+        provider: "{{ device }}"
+        name: "{{ item.name }}"
+        color: "{{ item.color }}"
         commit: false
       with_items:
-        - { name: 'Prod', color: 'red' }
-        - { name: 'SI', color: 'blue gray' }
-        - { name: 'Dev', color: 'green' }
+        - { name: "Prod", color: "red" }
+        - { name: "SI", color: "blue gray" }
+        - { name: "Dev", color: "green" }
 
     - name: Create address objects
-      paloaltonetworks.panos.panos_address_object:
-        provider: '{{ device }}'
-        name: '{{ item.name }}'
-        value: '{{ item.value }}'
-        description: '{{ item.description }}'
-        tag: '{{ item.tag|default([]) }}'
+      panos_address_object:
+        provider: "{{ device }}"
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        description: "{{ item.description }}"
+        tag: "{{ item.tag|default([]) }}"
         commit: false
       with_items:
-        - { name: 'Test-1.1.1.1', value: '1.1.1.1', description: 'Description One', tag: ['Prod'] }
-        - { name: 'Test-2.2.2.2', value: '2.2.2.2', description: 'Description Two', tag: ['Prod'] }
-        - { name: 'Test-3.3.3.3', value: '3.3.3.3', description: 'Description Three', tag: ['Prod'] }
-        - { name: 'Test-4.4.4.4', value: '4.4.4.4', description: 'Description Four', tag: ['SI'] }
-        - { name: 'Test-5.5.5.5', value: '5.5.5.5', description: 'Description Five', tag: ['SI'] }
+        - {
+            name: "Test-1.1.1.1",
+            value: "1.1.1.1",
+            description: "Description One",
+            tag: ["Prod"],
+          }
+        - {
+            name: "Test-2.2.2.2",
+            value: "2.2.2.2",
+            description: "Description Two",
+            tag: ["Prod"],
+          }
+        - {
+            name: "Test-3.3.3.3",
+            value: "3.3.3.3",
+            description: "Description Three",
+            tag: ["Prod"],
+          }
+        - {
+            name: "Test-4.4.4.4",
+            value: "4.4.4.4",
+            description: "Description Four",
+            tag: ["SI"],
+          }
+        - {
+            name: "Test-5.5.5.5",
+            value: "5.5.5.5",
+            description: "Description Five",
+            tag: ["SI"],
+          }
 
     - name: Create address ranges
-      paloaltonetworks.panos.panos_address_object:
-        provider: '{{ device }}'
-        name: '{{ item.name }}'
-        value: '{{ item.value }}'
-        description: '{{ item.description|default(omit) }}'
-        address_type: 'ip-range'
+      panos_address_object:
+        provider: "{{ device }}"
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        description: "{{ item.description|default(omit) }}"
+        address_type: "ip-range"
         commit: false
       with_items:
-        - { name: 'Test-Range-1', value: '1.1.1.1-2.2.2.2', description: 'Test Range 1' }
-        - { name: 'Test-Range-2', value: '2.2.2.2-3.3.3.3', description: 'Test Range 2' }
-        - { name: 'Test-Range-3', value: '3.3.3.3-4.4.4.4', description: 'Test Range 3' }
+        - {
+            name: "Test-Range-1",
+            value: "1.1.1.1-2.2.2.2",
+            description: "Test Range 1",
+          }
+        - {
+            name: "Test-Range-2",
+            value: "2.2.2.2-3.3.3.3",
+            description: "Test Range 2",
+          }
+        - {
+            name: "Test-Range-3",
+            value: "3.3.3.3-4.4.4.4",
+            description: "Test Range 3",
+          }
 
     - name: Create address groups
-      paloaltonetworks.panos.panos_address_group:
-        provider: '{{ device }}'
-        name: '{{ item.name }}'
-        static_value: '{{ item.static_value }}'
-        tag: '{{ item.tag|default([]) }}'
+      panos_address_group:
+        provider: "{{ device }}"
+        name: "{{ item.name }}"
+        static_value: "{{ item.static_value }}"
+        tag: "{{ item.tag|default([]) }}"
         commit: false
       with_items:
-        - { name: 'Prod-Instances', static_value: ['Test-1.1.1.1', 'Test-2.2.2.2', 'Test-3.3.3.3'], tag: ['Prod'] }
-        - { name: 'SI-Instances', static_value: ['Test-4.4.4.4', 'Test-5.5.5.5'], tag: ['SI'] }
+        - {
+            name: "Prod-Instances",
+            static_value: ["Test-1.1.1.1", "Test-2.2.2.2", "Test-3.3.3.3"],
+            tag: ["Prod"],
+          }
+        - {
+            name: "SI-Instances",
+            static_value: ["Test-4.4.4.4", "Test-5.5.5.5"],
+            tag: ["SI"],
+          }
 
     - name: Create service objects
-      paloaltonetworks.panos.panos_service_object:
-        provider: '{{ device }}'
-        name: '{{ item.name }}'
-        destination_port: '{{ item.destination_port }}'
-        description: '{{ item.description }}'
-        tag: '{{ item.tag|default({}) }}'
+      panos_service_object:
+        provider: "{{ device }}"
+        name: "{{ item.name }}"
+        destination_port: "{{ item.destination_port }}"
+        description: "{{ item.description }}"
+        tag: "{{ item.tag|default({}) }}"
         commit: false
       with_items:
-        - { name: 'ssh-tcp-22', destination_port: '22', description: 'SSH on tcp/22', tag: ['Prod'] }
-        - { name: 'mysql-tcp-3306', destination_port: '3306', description: 'MySQL on tcp/3306', tag: ['Prod'] }
+        - {
+            name: "ssh-tcp-22",
+            destination_port: "22",
+            description: "SSH on tcp/22",
+            tag: ["Prod"],
+          }
+        - {
+            name: "mysql-tcp-3306",
+            destination_port: "3306",
+            description: "MySQL on tcp/3306",
+            tag: ["Prod"],
+          }
 
     - name: Create service group objects
-      paloaltonetworks.panos.panos_service_group:
-        provider: '{{ device }}'
-        name: '{{ item.name }}'
-        value: '{{ item.value }}'
-        tag: '{{ item.tag|default({}) }}'
+      panos_service_group:
+        provider: "{{ device }}"
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        tag: "{{ item.tag|default({}) }}"
         commit: false
       with_items:
-        - { name: 'Prod-Services', value: ['ssh-tcp-22', 'mysql-tcp-3306'], tag: ['Prod'] }
+        - {
+            name: "Prod-Services",
+            value: ["ssh-tcp-22", "mysql-tcp-3306"],
+            tag: ["Prod"],
+          }

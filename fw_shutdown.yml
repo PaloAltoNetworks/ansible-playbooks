@@ -8,7 +8,7 @@
 # issuing the shutdown command terminates the API connection.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Modules Used
@@ -24,17 +24,20 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
+  collections:
+    - paloaltonetworks.panos
+
   vars:
     device:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username | default(omit) }}'
-      password: '{{ password | default(omit) }}'
-      api_key: '{{ api_key | default(omit) }}'
+      ip_address: "{{ ip_address }}"
+      username: "{{ username | default(omit) }}"
+      password: "{{ password | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
 
   tasks:
     - name: Issue firewall shutdown command
-      paloaltonetworks.panos.panos_op:
-        provider: '{{ device }}'
-        cmd: '<request><shutdown><system></system></shutdown></request>'
+      panos_op:
+        provider: "{{ device }}"
+        cmd: "<request><shutdown><system></system></shutdown></request>"
         cmd_is_xml: true
       ignore_errors: true

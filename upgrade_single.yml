@@ -9,7 +9,7 @@
 # see the 'download_panos_image.yml' playbook.
 #
 # This playbook requires connection details for the deivce to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Modules Used
@@ -22,7 +22,7 @@
 #
 # Required variables:
 #
-#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
+#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample
 #           definition of host variables.
 #
 #   version: Version to install.
@@ -36,30 +36,33 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
+  collections:
+    - paloaltonetworks.panos
+
   vars:
     device:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username | default(omit) }}'
-      password: '{{ password | default(omit) }}'
-      api_key: '{{ api_key | default(omit) }}'
+      ip_address: "{{ ip_address }}"
+      username: "{{ username | default(omit) }}"
+      password: "{{ password | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
 
     # backup_config - Create a backup of the currently running config.
     backup_config: true
 
     # backup_filename - Filename for running config backup.
-    backup_filename: 'ansible-backup-{{ ansible_date_time.date }}.xml'
+    backup_filename: "ansible-backup-{{ ansible_date_time.date }}.xml"
 
   tasks:
     - name: Backup device config
-      paloaltonetworks.panos.panos_op:
-        provider: '{{ device }}'
-        cmd: 'save config to {{ backup_filename }}'
+      panos_op:
+        provider: "{{ device }}"
+        cmd: "save config to {{ backup_filename }}"
       when: backup_config|bool
 
     - name: Install target PAN-OS version
-      paloaltonetworks.panos.panos_software:
-        provider: '{{ device }}'
-        version: '{{ version }}'
+      panos_software:
+        provider: "{{ device }}"
+        version: "{{ version }}"
         restart: true
 
     - name: Pause for restart
@@ -67,9 +70,9 @@
         seconds: 30
 
     - name: Check to see if device is ready
-      paloaltonetworks.panos.panos_op:
-        provider: '{{ device }}'
-        cmd: 'show chassis-ready'
+      panos_op:
+        provider: "{{ device }}"
+        cmd: "show chassis-ready"
       changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'

@@ -7,7 +7,7 @@
 # Quick examples of how to use the 'panos_security_rule' module to create security rules on a PAN-OS device.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Modules Used
@@ -23,38 +23,41 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
+  collections:
+    - paloaltonetworks.panos
+
   vars:
     device:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username | default(omit) }}'
-      password: '{{ password | default(omit) }}'
-      api_key: '{{ api_key | default(omit) }}'
+      ip_address: "{{ ip_address }}"
+      username: "{{ username | default(omit) }}"
+      password: "{{ password | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
 
   tasks:
     - name: Create first security rule
-      paloaltonetworks.panos.panos_security_rule:
-        provider: '{{ device }}'
-        rule_name: 'Prod SSH Inbound'
-        source_zone: ['untrust']
-        destination_zone: ['trust']
-        source_ip: ['any']
-        destination_ip: ['Prod-Instances']
-        application: ['ssh']
-        service: ['application-default']
-        action: 'allow'
-        tag_name: ['Prod']
+      panos_security_rule:
+        provider: "{{ device }}"
+        rule_name: "Prod SSH Inbound"
+        source_zone: ["untrust"]
+        destination_zone: ["trust"]
+        source_ip: ["any"]
+        destination_ip: ["Prod-Instances"]
+        application: ["ssh"]
+        service: ["application-default"]
+        action: "allow"
+        tag_name: ["Prod"]
         commit: false
 
     - name: Create second security rule
-      paloaltonetworks.panos.panos_security_rule:
-        provider: '{{ device }}'
-        rule_name: 'SI Inbound'
-        source_zone: ['untrust']
-        destination_zone: ['trust']
-        source_ip: ['any']
-        destination_ip: ['SI-Instances']
-        application: ['ssh', 'mysql']
-        service: ['application-default']
-        action: 'allow'
-        tag_name: ['SI']
+      panos_security_rule:
+        provider: "{{ device }}"
+        rule_name: "SI Inbound"
+        source_zone: ["untrust"]
+        destination_zone: ["trust"]
+        source_ip: ["any"]
+        destination_ip: ["SI-Instances"]
+        application: ["ssh", "mysql"]
+        service: ["application-default"]
+        action: "allow"
+        tag_name: ["SI"]
         commit: false
