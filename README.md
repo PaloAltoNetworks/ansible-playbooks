@@ -1,7 +1,6 @@
 # ansible-playbooks
 
-[![ansible-lint](https://github.com/PaloAltoNetworks/ansible-playbooks/workflows/ansible-lint/badge.svg)](https://github.com/PaloAltoNetworks/ansible-playbooks/actions?query=workflow%3Aansible-lint)
-
+![CI/CD](https://github.com/PaloAltoNetworks/ansible-playbooks/workflows/CI/CD/badge.svg)]
 Example Ansible playbooks using the Palo Alto Networks
 [Ansible Collection](https://github.com/PaloAltoNetworks/pan-os-ansible), and what you'll need to get started writing
 your own.  We try to add interesting things to this repository over time based on customer questions, so check back

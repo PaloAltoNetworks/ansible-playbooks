@@ -1,4 +1,4 @@
-name: ansible-lint
+name: CI/CD
 on:
   push:
   schedule:
@@ -7,7 +7,7 @@ on:
 jobs:
   lint:
     name: ansible-lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out source
