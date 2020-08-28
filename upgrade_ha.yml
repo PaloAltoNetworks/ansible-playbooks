@@ -5,10 +5,10 @@
 # ===========
 #
 # Upgrades a PAN-OS HA pair to the specified version.  Upgrade must be a single step (i.e. 8.1.7 to 8.1.12).  For major
-# version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the
+# version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the 
 # 'download_panos_image.yml' playbook.
 #
-# This playbook requires connection details for the two members of the HA pair to be specified in the variables
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
 # 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
 # (see `host_vars/ha_pair.yml` for an example) or extra vars.
 #
@@ -35,27 +35,24 @@
 - hosts: '{{ target | default("ha_pair") }}'
   connection: local
 
-  collections:
-    - paloaltonetworks.panos
-
   vars:
     primary:
-      ip_address: "{{ primary_ip_address }}"
-      username: "{{ username | default(omit) }}"
-      password: "{{ password | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      ip_address: '{{ primary_ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     secondary:
-      ip_address: "{{ secondary_ip_address }}"
-      username: "{{ username | default(omit) }}"
-      password: "{{ password | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      ip_address: '{{ secondary_ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     # backup_config - Create a backup of the currently running config before upgrading on both devices.
     backup_config: true
 
     # backup_filename - Filename for running config backup.
-    backup_filename: "ansible-backup-{{ ansible_date_time.date }}.xml"
+    backup_filename: 'ansible-backup-{{ ansible_date_time.date }}.xml'
 
     # pause_mid_upgrade - Optionally pause for additional verification during upgrade.  This playbook will perform
     #                     basic checks for HA status and session sync, but this will wait for manual verification before
@@ -64,46 +61,45 @@
 
   tasks:
     - name: Backup device config (primary)
-      panos_op:
-        provider: "{{ primary }}"
-        cmd: "save config to {{ backup_filename }}"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ primary }}'
+        cmd: 'save config to {{ backup_filename }}'
       when: backup_config|bool
 
     - name: Backup device config (secondary)
-      panos_op:
-        provider: "{{ secondary }}"
-        cmd: "save config to {{ backup_filename }}"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ secondary }}'
+        cmd: 'save config to {{ backup_filename }}'
       when: backup_config|bool
 
     - name: Download target PAN-OS version
-      panos_software:
-        provider: "{{ primary }}"
-        version: "{{ version }}"
+      paloaltonetworks.panos.panos_software:
+        provider: '{{ primary }}'
+        version: '{{ version }}'
         download: true
         sync_to_peer: true
         install: false
 
     - name: Suspend primary device
-      panos_op:
-        provider: "{{ primary }}"
-        cmd: "request high-availability state suspend"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ primary }}'
+        cmd: 'request high-availability state suspend'
 
     - name: Check that secondary is now active
-      panos_op:
-        provider: "{{ secondary }}"
-        cmd: "show high-availability state"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ secondary }}'
+        cmd: 'show high-availability state'
       register: secondary_active
       retries: 10
       delay: 30
-      until:
-        ( secondary_active.stdout | from_json).response.result.group["local-info"].state == 'active' and
-        ( secondary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
-        ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested' # yamllint disable-line
+      until: ( secondary_active.stdout | from_json).response.result.group["local-info"].state == 'active' and
+             ( secondary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
+             ( secondary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested' # yamllint disable-line
 
     - name: Install target PAN-OS version and restart (primary)
-      panos_software:
-        provider: "{{ primary }}"
-        version: "{{ version }}"
+      paloaltonetworks.panos.panos_software:
+        provider: '{{ primary }}'
+        version: '{{ version }}'
         download: false
         restart: true
 
@@ -112,9 +108,9 @@
         seconds: 30
 
     - name: Chassis ready (primary)
-      panos_op:
-        provider: "{{ primary }}"
-        cmd: "show chassis-ready"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ primary }}'
+        cmd: 'show chassis-ready'
       changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
@@ -122,42 +118,40 @@
       delay: 60
 
     - name: State sync check (primary)
-      panos_op:
-        provider: "{{ primary }}"
-        cmd: "show high-availability state"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ primary }}'
+        cmd: 'show high-availability state'
       register: primary_state_sync
       retries: 10
       delay: 30
-      until:
-        ( primary_state_sync.stdout | from_json).response.result.group["local-info"].state == 'passive' and
-        ( primary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == 'Complete'
+      until: ( primary_state_sync.stdout | from_json).response.result.group["local-info"].state == 'passive' and
+             ( primary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == 'Complete'
 
     - name: Pause for verification
       pause:
-        prompt: "Primary upgrade complete.  Pausing for verification."
+        prompt: 'Primary upgrade complete.  Pausing for verification.'
       when: pause_mid_upgrade
 
     - name: Suspend secondary device
-      panos_op:
-        provider: "{{ secondary }}"
-        cmd: "request high-availability state suspend"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ secondary }}'
+        cmd: 'request high-availability state suspend'
 
     - name: Check that primary is now active
-      panos_op:
-        provider: "{{ primary }}"
-        cmd: "show high-availability state"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ primary }}'
+        cmd: 'show high-availability state'
       register: primary_active
       retries: 10
       delay: 30
-      until:
-        ( primary_active.stdout | from_json).response.result.group["local-info"].state == 'active' and
-        ( primary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
-        ( primary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested'
+      until: ( primary_active.stdout | from_json).response.result.group["local-info"].state == 'active' and
+             ( primary_active.stdout | from_json).response.result.group["peer-info"].state == 'suspended' and
+             ( primary_active.stdout | from_json).response.result.group["peer-info"]["state-reason"] == 'User requested'
 
     - name: Install target PAN-OS version and restart (secondary)
-      panos_software:
-        provider: "{{ secondary }}"
-        version: "{{ version }}"
+      paloaltonetworks.panos.panos_software:
+        provider: '{{ secondary }}'
+        version: '{{ version }}'
         download: false
         restart: true
 
@@ -166,9 +160,9 @@
         seconds: 30
 
     - name: Chassis ready (secondary)
-      panos_op:
-        provider: "{{ secondary }}"
-        cmd: "show chassis-ready"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ secondary }}'
+        cmd: 'show chassis-ready'
       changed_when: false
       register: result
       until: result is not failed and (result.stdout | from_json).response.result == 'yes'
@@ -176,12 +170,11 @@
       delay: 60
 
     - name: State sync check (secondary)
-      panos_op:
-        provider: "{{ secondary }}"
-        cmd: "show high-availability state"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ secondary }}'
+        cmd: 'show high-availability state'
       register: secondary_state_sync
       retries: 10
       delay: 30
-      until:
-        ( secondary_state_sync.stdout | from_json).response.result.group["local-info"].state == 'passive' and
-        ( secondary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == 'Complete'
+      until: ( secondary_state_sync.stdout | from_json).response.result.group["local-info"].state == 'passive' and
+             ( secondary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == 'Complete'

@@ -7,7 +7,7 @@
 # Upgrades the content version on a PAN-OS device or HA pair.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
 # extra vars.
 #
 # Usage
@@ -29,29 +29,26 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  collections:
-    - paloaltonetworks.panos
-
   vars:
     device:
-      ip_address: "{{ ip_address }}"
-      username: "{{ username | default(omit) }}"
-      password: "{{ password | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     sync_to_peer: False
 
   tasks:
     - name: Check latest content
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "request content upgrade check"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: 'request content upgrade check'
       register: check
       changed_when: False
 
     - name: Download latest content
-      panos_op:
-        provider: "{{ device }}"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
         cmd: |
           <request><content><upgrade><download>
           <latest></latest>
@@ -61,17 +58,17 @@
       register: download
 
     - name: Check content download result
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "show jobs id {{ (download.stdout | from_json).response.result.job }}"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: 'show jobs id {{ (download.stdout | from_json).response.result.job }}'
       register: download_job
       until: download_job is not failed and (download_job.stdout | from_json).response.result.job.status == 'FIN'
       retries: 10
       delay: 60
 
     - name: Install latest content
-      panos_op:
-        provider: "{{ device }}"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
         cmd: |
           <request><content><upgrade><install>
           <version>latest</version>
@@ -81,9 +78,9 @@
       register: install
 
     - name: Check content install result
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "show jobs id {{ (install.stdout | from_json).response.result.job }}"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: 'show jobs id {{ (install.stdout | from_json).response.result.job }}'
       register: install_job
       until: install_job is not failed and (install_job.stdout | from_json).response.result.job.status == 'FIN'
       retries: 10

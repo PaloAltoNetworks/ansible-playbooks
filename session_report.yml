@@ -9,7 +9,7 @@
 # 'template' module to write a report to the current directory.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
 # extra vars.
 #
 # Modules Used
@@ -25,29 +25,26 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  collections:
-    - paloaltonetworks.panos
-
   vars:
     device:
-      ip_address: "{{ ip_address }}"
-      username: "{{ username | default(omit) }}"
-      password: "{{ password | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     session_min_age: 86400
 
   tasks:
     - name: Run show session all command
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "<show><session><all><filter><min-age>{{ session_min_age }}</min-age></filter></all></session></show>"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: '<show><session><all><filter><min-age>{{ session_min_age }}</min-age></filter></all></session></show>'
         cmd_is_xml: True
       register: result
 
     - name: Output list of sessions to file
       template:
         src: session_report.j2
-        dest: "{{ ip_address }}-{{ ansible_date_time.iso8601 }}-session_report.txt"
+        dest: '{{ ip_address }}-{{ ansible_date_time.iso8601 }}-session_report.txt'
       vars:
-        sessions: "{{ (result.stdout | from_json).response.result.entry }}"
+        sessions: '{{ (result.stdout | from_json).response.result.entry }}'

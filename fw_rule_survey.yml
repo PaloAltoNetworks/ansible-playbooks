@@ -7,7 +7,7 @@
 # This is similar to 'fw_rules.yml', but the variables can be overridden using the output of an Ansible Tower survey.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
 # extra vars.
 #
 # Modules Used
@@ -23,37 +23,34 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  collections:
-    - paloaltonetworks.panos
-
   vars:
     device:
-      ip_address: "{{ ip_address }}"
-      username: "{{ username | default(omit) }}"
-      password: "{{ password | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
-    rule_name: "Survey Rule"
-    source_zone: "trust"
-    source_ip: "any"
-    destination_zone: "untrust"
-    destination_ip: "any"
+    rule_name: 'Survey Rule'
+    source_zone: 'trust'
+    source_ip: 'any'
+    destination_zone: 'untrust'
+    destination_ip: 'any'
     application:
-      - "any"
+      - 'any'
     service:
-      - "application-default"
+      - 'application-default'
 
   tasks:
     - name: Create security rule via extra_vars
-      panos_security_rule:
-        provider: "{{ device }}"
-        rule_name: "{{ rule_name }}"
-        source_zone: "{{ source_zone }}"
-        destination_zone: "{{ destination_zone }}"
-        source_ip: "{{ source_ip }}"
-        destination_ip: "{{ destination_ip }}"
-        application: "{{ application }}"
-        service: "{{ service }}"
-        action: "allow"
-        tag_name: "{{ tag|default([]) }}"
+      paloaltonetworks.panos.panos_security_rule:
+        provider: '{{ device }}'
+        rule_name: '{{ rule_name }}'
+        source_zone: '{{ source_zone }}'
+        destination_zone: '{{ destination_zone }}'
+        source_ip: '{{ source_ip }}'
+        destination_ip: '{{ destination_ip }}'
+        application: '{{ application }}'
+        service: '{{ service }}'
+        action: 'allow'
+        tag_name: '{{ tag|default([]) }}'
         commit: false

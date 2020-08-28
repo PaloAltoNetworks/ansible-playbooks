@@ -8,7 +8,7 @@
 # there are no active config locks before continuing.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
 # extra vars.
 #
 # Modules Used
@@ -24,23 +24,20 @@
 - hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  collections:
-    - paloaltonetworks.panos
-
   vars:
     device:
-      ip_address: "{{ ip_address }}"
-      username: "{{ username | default(omit) }}"
-      password: "{{ password | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
     vsys: vsys1
 
   tasks:
     - name: Wait for config lock
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "<show><config-locks><vsys>{{ vsys }}</vsys></config-locks></show>"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: '<show><config-locks><vsys>{{ vsys }}</vsys></config-locks></show>'
         cmd_is_xml: true
       retries: 30
       delay: 10
@@ -48,16 +45,16 @@
       until: result.stdout_xml == '<response status="success"><result><config-locks /></result></response>'
 
     - name: Acquire config lock
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "<request><config-lock><add><comment>Ansible config lock</comment></add></config-lock></request>"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: '<request><config-lock><add><comment>Ansible config lock</comment></add></config-lock></request>'
         cmd_is_xml: true
 
     - debug:
-        msg: "Configuration would be changed here"
+        msg: 'Configuration would be changed here'
 
     - name: Release config lock
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "<request><config-lock><remove></remove></config-lock></request>"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: '<request><config-lock><remove></remove></config-lock></request>'
         cmd_is_xml: true

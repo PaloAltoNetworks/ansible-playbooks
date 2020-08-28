@@ -8,7 +8,7 @@
 # using 'panos_op', and issues the commit command if there are uncommitted changes.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
 # extra vars.
 #
 # Modules Used
@@ -25,29 +25,26 @@
   connection: local
   gather_facts: false
 
-  collections:
-    - paloaltonetworks.panos
-
   vars:
     device:
-      ip_address: "{{ ip_address }}"
-      username: "{{ username | default(omit) }}"
-      password: "{{ password | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
   tasks:
     - name: Check for pending changes
-      panos_op:
-        provider: "{{ device }}"
-        cmd: "show config list changes"
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: 'show config list changes'
       register: changes
 
     - debug:
-        msg: "{{ changes.stdout | from_json }}"
+        msg: '{{ changes.stdout | from_json }}'
 
     - name: Commit changes if needed
-      panos_commit:
-        provider: "{{ device }}"
+      paloaltonetworks.panos.panos_commit:
+        provider: '{{ device }}'
       when: >
         (changes.stdout | from_json).response.result.journal is defined and
         (changes.stdout | from_json).response.result.journal.entry | length > 0
