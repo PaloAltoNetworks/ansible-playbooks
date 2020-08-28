@@ -25,4 +25,4 @@ jobs:
         run: ansible-galaxy collection install -r collections/requirements.yml
 
       - name: Run ansible-lint
-        run: ansible-lint *.yml
+        run: ansible-lint -x 208 *.yml
