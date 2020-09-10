@@ -1,3 +1,4 @@
 pandevice==0.14.0
 pan-python
 xmltodict
+boto3
