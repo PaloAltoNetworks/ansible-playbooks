@@ -1,0 +1,35 @@
+---
+vars:
+  aws_vpn:
+    vpn_id: "{{ item.vpn_id.get('id') }}"
+
+    peer_as: "{{ item.peer_as }}"
+
+    peer_1_outside_ip: "{{ item.peer_1_outside_ip }}"
+    peer_1_inside_ip: "{{ item.peer_1_inside_ip }}"
+    psk_1: "{{ item.psk_1 }}"
+    peer_2_outside_ip: "{{ item.peer_2_outside_ip }}"
+    peer_2_inside_ip: "{{ item.peer_2_inside_ip }}"
+    psk_2: "{{ item.psk_2 }}"
+
+    tunnel_if_1_ip: "{{ item.tunnel_if_1_ip }}"
+    tunnel_if_2_ip: "{{ item.tunnel_if_2_ip }}"
+
+keys:
+  aws_vpn:
+    value: "{{ aws_vpn }}"
+    top: .
+    items:
+      vpn_connection: vpn_connection
+      vpn_id: ".[@id]"
+
+      peer_as: ipsec_tunnel[1]/vpn_gateway/bgp/asn
+      peer_1_outside_ip: ipsec_tunnel[1]/vpn_gateway/tunnel_outside_address/ip_address
+      peer_1_inside_ip: ipsec_tunnel[1]/vpn_gateway/tunnel_inside_address/ip_address
+      psk_1: ipsec_tunnel[1]/ike/pre_shared_key
+      peer_2_outside_ip: ipsec_tunnel[2]/vpn_gateway/tunnel_outside_address/ip_address
+      peer_2_inside_ip: ipsec_tunnel[2]/vpn_gateway/tunnel_inside_address/ip_address
+      psk_2: ipsec_tunnel[2]/ike/pre_shared_key
+
+      tunnel_if_1_ip: ipsec_tunnel[1]/customer_gateway/tunnel_inside_address/ip_address
+      tunnel_if_2_ip: ipsec_tunnel[2]/customer_gateway/tunnel_inside_address/ip_address

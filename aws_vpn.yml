@@ -1,0 +1,242 @@
+---
+# aws_vpn.yml - Create VPN connection with AWS private VPC.
+#
+# Description
+# ===========
+#
+# Creates the VPN tunnel and BGP configuration to establish a VPN connection with an AWS private VPC.  This playbook
+# uses the 'ec2_vpc_vpn_info' module to pull the VPN configuration.
+#
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
+# extra vars.
+#
+# This playbook requires the AWS VPN id to be specified in the 'vpn_id' variable.
+#
+#
+# Required Python modules
+# =======================
+#
+# boto3
+#
+# Modules Used
+# ============
+#
+# ec2_vpc_vpn_info - https://docs.ansible.com/ansible/latest/modules/ec2_vpc_vpn_info_module.html
+# panos_ike_crypto_profile - https://ansible-pan.readthedocs.io/en/latest/modules/panos_ike_crypto_profile_module.html
+# panos_ike_gateway - https://ansible-pan.readthedocs.io/en/latest/modules/panos_ike_gateway_module.html
+# panos_ipsec_profile - https://ansible-pan.readthedocs.io/en/latest/modules/panos_ipsec_profile_module.html
+# panos_tunnel - https://ansible-pan.readthedocs.io/en/latest/modules/panos_tunnel_module.html
+# panos_ipsec_tunnel - https://ansible-pan.readthedocs.io/en/latest/modules/panos_ipsec_tunnel_module.html
+# panos_bgp - https://ansible-pan.readthedocs.io/en/latest/modules/panos_bgp_module.html
+# panos_bgp_peer_group - https://ansible-pan.readthedocs.io/en/latest/modules/panos_bgp_peer_group_module.html
+# panos_bgp_peer - https://ansible-pan.readthedocs.io/en/latest/modules/panos_bgp_peer_module.html
+# panos_redistribution - https://ansible-pan.readthedocs.io/en/latest/modules/panos_redistribution_module.html
+# panos_bgp_redistribute - https://ansible-pan.readthedocs.io/en/latest/modules/panos_bgp_redistribute_module.html
+# panos_commit - https://ansible-pan.readthedocs.io/en/latest/modules/panos_commit_module.html
+#
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory aws_vpn.yml -e vpn_id=vpn-08ef9ead262d7490f
+
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
+
+  vars:
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
+
+    untrust_interface: 'ethernet1/1'
+    trust_interface: 'ethernet1/2'
+    tunnel_if_1: 'tunnel.10'
+    tunnel_if_2: 'tunnel.11'
+    zone_name: 'vpn'
+    vr_name: 'default'
+    local_as: '65000'
+    router_id: '10.0.0.10'
+    peer_group: 'AmazonBGP'
+    redist_profile: 'Export_to_Amazon'
+    redist_priority: 2
+
+    # AWS VPN default settings
+    ike_settings:
+      dhgroup: 'group2'
+      authentication: 'sha1'
+      lifetime_sec: '28800'
+      encryption: 'aes-128-cbc'
+
+    ipsec_settings:
+      authentication: 'sha1'
+      encryption: 'aes-128-cbc'
+      dhgroup: 'group2'
+      lifetime_seconds: '28800'
+
+  tasks:
+    - name: Get VPN connection info
+      ec2_vpc_vpn_info:
+        vpn_connection_ids: '{{ vpn_id }}'
+      register: vpn_conn_facts
+
+    - name: set_fact
+      set_fact:
+        parsed: "{{ vpn_conn_facts.vpn_connections[0].customer_gateway_configuration | parse_xml('aws_vpn_spec.yml') }}"
+
+    - name: Create IKE crypto profiles
+      paloaltonetworks.panos.panos_ike_crypto_profile:
+        provider: '{{ device }}'
+        name: '{{ item }}'
+        dhgroup: '{{ ike_settings.dhgroup }}'
+        authentication: '{{ ike_settings.authentication }}'
+        encryption: '{{ ike_settings.encryption }}'
+        lifetime_sec: '{{ ike_settings.lifetime_sec }}'
+        commit: False
+      with_items:
+        - '{{ vpn_id }}-0'
+        - '{{ vpn_id }}-1'
+
+    - name: Create IKE gateways
+      paloaltonetworks.panos.panos_ike_gateway:
+        provider: '{{ device }}'
+        name: '{{ item.name }}'
+        protocol_version: 'ikev1'
+        interface: '{{ untrust_interface }}'
+        dead_peer_detection: true
+        dead_peer_detection_interval: '10'
+        dead_peer_detection_retry: '3'
+        psk: '{{ item.psk }}'
+        peer_ip_value: '{{ item.peer_ip }}'
+        ikev1_exchange_mode: 'main'
+        crypto_profile_name: '{{ item.crypto_profile_name }}'
+        enable_passive_mode: 'no'
+        commit: False
+      with_items:
+        - name: 'ike-{{ vpn_id }}-0'
+          peer_ip: '{{ parsed.aws_vpn[0].peer_1_outside_ip }}'
+          psk: '{{ parsed.aws_vpn[0].psk_1 }}'
+          crypto_profile_name: '{{ vpn_id }}-0'
+        - name: 'ike-{{ vpn_id }}-1'
+          peer_ip: '{{ parsed.aws_vpn[0].peer_2_outside_ip }}'
+          psk: '{{ parsed.aws_vpn[0].psk_2 }}'
+          crypto_profile_name: '{{ vpn_id }}-1'
+
+    - name: Create IPsec profiles
+      paloaltonetworks.panos.panos_ipsec_profile:
+        provider: '{{ device }}'
+        name: '{{ item }}'
+        dhgroup: '{{ ipsec_settings.dhgroup }}'
+        authentication: '{{ ipsec_settings.authentication }}'
+        encryption: '{{ ipsec_settings.encryption }}'
+        lifetime_seconds: '{{ ipsec_settings.lifetime_seconds }}'
+        commit: False
+      with_items:
+        - 'ipsec-{{ vpn_id }}-0'
+        - 'ipsec-{{ vpn_id }}-1'
+
+    - name: Create tunnel interfaces
+      paloaltonetworks.panos.panos_tunnel:
+        provider: '{{ device }}'
+        if_name: '{{ item.if_name }}'
+        ip: '{{ item.ip }}/30'
+        management_profile: 'Ping'
+        mtu: '{{ item.mtu }}'
+        zone_name: '{{ item.zone_name }}'
+        vr_name: '{{ item.vr_name }}'
+        commit: False
+      with_items:
+        - if_name: '{{ tunnel_if_1 }}'
+          ip: '{{ parsed.aws_vpn[0].tunnel_if_1_ip }}'
+          mtu: '1427'
+          zone_name: '{{ zone_name }}'
+          vr_name: '{{ vr_name }}'
+        - if_name: '{{ tunnel_if_2 }}'
+          ip: '{{ parsed.aws_vpn[0].tunnel_if_2_ip }}'
+          mtu: '1427'
+          zone_name: '{{ zone_name }}'
+          vr_name: '{{ vr_name }}'
+
+    - name: Create IPsec tunnels
+      paloaltonetworks.panos.panos_ipsec_tunnel:
+        provider: '{{ device }}'
+        name: '{{ item.name }}'
+        tunnel_interface: '{{ item.tunnel_interface }}'
+        ike_gtw_name: '{{ item.ike_gtw_name }}'
+        ipsec_profile: '{{ item.ipsec_profile }}'
+        enable_tunnel_monitor: 'yes'
+        tunnel_monitor_dest_ip: '{{ item.tunnel_monitor_dest_ip }}'
+        tunnel_monitor_profile: 'default'
+        commit: False
+      with_items:
+        - name: 'ipsec-tunnel-1'
+          ike_gtw_name: 'ike-{{ vpn_id }}-0'
+          ipsec_profile: 'ipsec-{{ vpn_id }}-0'
+          tunnel_interface: '{{ tunnel_if_1 }}'
+          tunnel_monitor_dest_ip: '{{ parsed.aws_vpn[0].peer_1_inside_ip }}'
+        - name: 'ipsec-tunnel-2'
+          ike_gtw_name: 'ike-{{ vpn_id }}-1'
+          ipsec_profile: 'ipsec-{{ vpn_id }}-1'
+          tunnel_interface: '{{ tunnel_if_2 }}'
+          tunnel_monitor_dest_ip: '{{ parsed.aws_vpn[0].peer_2_inside_ip }}'
+
+    - name: Configure BGP
+      paloaltonetworks.panos.panos_bgp:
+        provider: '{{ device }}'
+        vr_name: '{{ vr_name }}'
+        local_as: '{{ local_as }}'
+        router_id: '{{ router_id }}'
+        install_route: yes
+        commit: False
+
+    - name: Create BGP peer group
+      paloaltonetworks.panos.panos_bgp_peer_group:
+        provider: '{{ device }}'
+        name: '{{ peer_group }}'
+        vr_name: '{{ vr_name }}'
+        commit: False
+
+    - name: Create BGP peers
+      paloaltonetworks.panos.panos_bgp_peer:
+        provider: '{{ device }}'
+        peer_group: '{{ peer_group }}'
+        name: '{{ item.name }}'
+        local_interface: '{{ item.local_interface }}'
+        local_interface_ip: '{{ item.local_interface_ip }}/30'
+        peer_address_ip: '{{ item.peer_address_ip }}'
+        peer_as: '{{ parsed.aws_vpn[0].peer_as }}'
+        connection_hold_time: '30'
+        connection_keep_alive_interval: '10'
+        commit: False
+      with_items:
+        - name: 'amazon-{{ vpn_id }}-0'
+          local_interface: '{{ tunnel_if_1 }}'
+          local_interface_ip: '{{ parsed.aws_vpn[0].tunnel_if_1_ip }}'
+          peer_address_ip: '{{ parsed.aws_vpn[0].peer_1_inside_ip }}'
+        - name: 'amazon-{{ vpn_id }}-1'
+          local_interface: '{{ tunnel_if_2 }}'
+          local_interface_ip: '{{ parsed.aws_vpn[0].tunnel_if_2_ip }}'
+          peer_address_ip: '{{ parsed.aws_vpn[0].peer_2_inside_ip }}'
+
+    - name: Create redistribution profile
+      paloaltonetworks.panos.panos_redistribution:
+        provider: '{{ device }}'
+        name: '{{ redist_profile }}'
+        priority: '{{ redist_priority }}'
+        vr_name: '{{ vr_name }}'
+        filter_type: 'connect'
+        filter_interface: '{{ trust_interface }}'
+        action: 'redist'
+        commit: False
+
+    - name: Add BGP redistribution
+      paloaltonetworks.panos.panos_bgp_redistribute:
+        provider: '{{ device }}'
+        name: '{{ redist_profile }}'
+        vr_name: '{{ vr_name }}'
+        commit: False
+
+    - name: Commit configuration
+      paloaltonetworks.panos.panos_commit:
+        provider: '{{ device }}'
