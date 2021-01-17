@@ -61,6 +61,15 @@ $ ansible-galaxy collection install -r collections/requirements.yml
 $ pip3 install --user -r requirements.txt
 ```
 
+### Customize connection parameters
+
+The supplied inventory sets variables for each host in the `host_vars` directory.  Authentication credentials are not
+included, and should be specified either on the CLI, or in a seperate file like so:
+
+```
+$ ansible-playbook -i inventory check_ready.yml -e @creds.yml
+```
+
 You're now ready to start using these playbooks.
 
 ## Sample Playbooks
