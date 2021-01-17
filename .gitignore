@@ -8,3 +8,6 @@ prod_creds.yml
 *.retry
 **/venv/*
 **/.vscode/*
+
+Pipfile
+Pipfile.lock
