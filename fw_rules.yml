@@ -13,7 +13,7 @@
 # Modules Used
 # ============
 #
-# panos_security_rule - https://ansible-pan.readthedocs.io/en/latest/modules/panos_security_rule_module.html
+# panos_security_rule - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_security_rule.html
 #
 # Usage
 # =====

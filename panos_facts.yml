@@ -13,7 +13,7 @@
 # Modules Used
 # ============
 #
-# panos_facts - https://ansible-pan.readthedocs.io/en/latest/modules/panos_facts_module.html
+# panos_facts - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_facts.html
 #
 # Usage
 # =====

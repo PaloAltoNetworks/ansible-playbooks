@@ -15,11 +15,11 @@
 # Modules Used
 # ============
 #
-# panos_tag_object - https://ansible-pan.readthedocs.io/en/latest/modules/panos_tag_object_module.html
-# panos_address_object - https://ansible-pan.readthedocs.io/en/latest/modules/panos_address_object_module.html
-# panos_address_group - https://ansible-pan.readthedocs.io/en/latest/modules/panos_address_group_module.html
-# panos_service_object - https://ansible-pan.readthedocs.io/en/latest/modules/panos_service_object_module.html
-# panos_service_group - https://ansible-pan.readthedocs.io/en/latest/modules/panos_service_group_module.html
+# panos_tag_object - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_tag_object.html
+# panos_address_object - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_address_object.html
+# panos_address_group - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_address_group.html
+# panos_service_object - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_service_object.html
+# panos_service_group - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_service_group.html
 #
 # Usage
 # =====

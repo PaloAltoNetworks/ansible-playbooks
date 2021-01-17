@@ -15,7 +15,7 @@
 # Modules Used
 # ============
 #
-# panos_op - https://ansible-pan.readthedocs.io/en/latest/modules/panos_op_module.html
+# panos_op - https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html
 #
 # Usage
 # =====
