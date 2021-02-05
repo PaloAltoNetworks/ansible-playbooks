@@ -7,7 +7,7 @@ on:
 jobs:
   lint:
     name: ansible-lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out source
@@ -18,8 +18,11 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Install ansible-lint
-        run: pip install ansible-lint
+      - name: Set up Pipenv
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+          python -m pipenv install --dev --system
 
       - name: Install required collections
         run: ansible-galaxy collection install -r collections/requirements.yml
