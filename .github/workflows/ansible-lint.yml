@@ -32,7 +32,7 @@ jobs:
 
   automerge:
     name: Auto-merge
-    needs: test
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Auto-merge pull requests from dependabot (patches only)
