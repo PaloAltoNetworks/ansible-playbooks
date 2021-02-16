@@ -83,7 +83,7 @@
 
     - name: set_fact
       set_fact:
-        parsed: "{{ vpn_conn_facts.vpn_connections[0].customer_gateway_configuration | parse_xml('aws_vpn_spec.yml') }}"
+        parsed: "{{ vpn_conn_facts.vpn_connections[0].customer_gateway_configuration | parse_xml('spec/aws_vpn_spec.yml') }}"
 
     - name: Create IKE crypto profiles
       paloaltonetworks.panos.panos_ike_crypto_profile:

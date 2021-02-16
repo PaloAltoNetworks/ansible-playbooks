@@ -46,5 +46,6 @@
       template:
         src: session_report.j2
         dest: '{{ ip_address }}-{{ ansible_date_time.iso8601 }}-session_report.txt'
+        mode: '0644'
       vars:
         sessions: '{{ (result.stdout | from_json).response.result.entry }}'
