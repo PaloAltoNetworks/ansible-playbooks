@@ -105,11 +105,18 @@
         },
         "ansible-lint": {
             "hashes": [
-                "sha256:1012fc3f5c4c0c58eece515860f19c34c5088faa5be412eec6fae5b45bda9c4f",
-                "sha256:300e841f690b556a08d44902d6414283dc101079b27909e3a892f1cf1d10d7ff"
+                "sha256:285af6c78c9a271f6afcaa0ce57d1eff8147c1621c9fc137ed1c59881b8da63d",
+                "sha256:9c9ef05d361c374097206d1df200ab01c9cd3feef42b55898b90b0a09fee88d4"
             ],
             "index": "pypi",
-            "version": "==4.3.7"
+            "version": "==5.0.0"
+        },
+        "bracex": {
+            "hashes": [
+                "sha256:01f715cd0ed7a622ec8b32322e715813f7574de531f09b70f6f3b2c10f682425",
+                "sha256:64e2a6d14de9c8e022cf40539ac8468ba7c4b99550a2b05fc87fd20e392e568f"
+            ],
+            "version": "==2.1.1"
         },
         "cffi": {
             "hashes": [
@@ -178,6 +185,13 @@
                 "sha256:c8dc9859c5a046e1ca22da360dfd609c09064a4f974881cb5cba977c581088ec"
             ],
             "version": "==3.4.5"
+        },
+        "enrich": {
+            "hashes": [
+                "sha256:0e99ff57d87f7b5def0ca79917e88fb9351aa0d52e228ee38bff7cd858315fe4",
+                "sha256:ed0b3ac33495cc95f1ccafaf6c7ec0a0fcabb20f7f7a90121f37eb83a85bf82b"
+            ],
+            "version": "==1.2.6"
         },
         "jinja2": {
             "hashes": [
@@ -319,6 +333,13 @@
                 "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"
             ],
             "version": "==3.7.4.3"
+        },
+        "wcmatch": {
+            "hashes": [
+                "sha256:7ba09191f9582e82d864829bdfbab02df46e26a46a304e57c7fe5652f07f297a",
+                "sha256:9b05ec84da6c711d14191d30c19dffba0e31cdbdaec8819e44c75c8ef83cfadc"
+            ],
+            "version": "==8.1.1"
         }
     }
 }
