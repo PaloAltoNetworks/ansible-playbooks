@@ -92,10 +92,10 @@
     "develop": {
         "ansible": {
             "hashes": [
-                "sha256:9ff024500116d53c460cb09ea92e3c9404119f100d1d1ff0de69a9dafca561d5"
+                "sha256:843aa807813318b0c8a6684a2895c74a4ccfb3c01d2bb41a53856b2434ebaaec"
             ],
             "index": "pypi",
-            "version": "==2.10.7"
+            "version": "==3.0.0"
         },
         "ansible-base": {
             "hashes": [
