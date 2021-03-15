@@ -39,7 +39,8 @@
         cmd: 'show config list changes'
       register: changes
 
-    - debug:
+    - name: Display changes
+      debug:
         msg: '{{ changes.stdout | from_json }}'
 
     - name: Commit changes if needed
