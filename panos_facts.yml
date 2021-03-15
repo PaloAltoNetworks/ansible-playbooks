@@ -35,6 +35,7 @@
       paloaltonetworks.panos.panos_facts:
         provider: '{{ device }}'
 
-    - debug:
+    - name: Display model, PAN-OS version
+      debug:
         msg: "Model: {{ ansible_facts['net_model'] }}, version: {{ ansible_facts['net_version'] }}"
 

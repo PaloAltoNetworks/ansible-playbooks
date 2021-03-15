@@ -64,7 +64,8 @@
              ((final.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] | int) >
              ((initial.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] | int)
 
-    - debug:
+    - name: Display hit counts
+      debug:
         msg: "Initial count: {{ initial_count | int }}, final count: {{ final_count | int }}."
       vars:
         initial_count: '{{ (initial.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] }}'

@@ -50,7 +50,8 @@
         cmd: '<request><config-lock><add><comment>Ansible config lock</comment></add></config-lock></request>'
         cmd_is_xml: true
 
-    - debug:
+    - name: Change configuration here.
+      debug:
         msg: 'Configuration would be changed here'
 
     - name: Release config lock
