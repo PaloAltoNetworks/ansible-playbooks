@@ -24,10 +24,10 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:28506d23ffa9abf5666c2c909c7edc83a1112cd44fe74eb1a4960df561531e98",
-                "sha256:54587d3c9d0d98ac579681245ea36f547cd5048e2bb9212e5e7166a963bcb562"
+                "sha256:6a672ba41dd00e5c1c1824ca8143d180d88de8736d78c0b1f96b8d3cb0466561",
+                "sha256:f7f103fa0651c69dd360c7d0ecd874854303de5cc0869e0cbc2818a52baacc69"
             ],
-            "version": "==1.20.39"
+            "version": "==1.20.49"
         },
         "jmespath": {
             "hashes": [
@@ -105,11 +105,11 @@
         },
         "ansible-lint": {
             "hashes": [
-                "sha256:0de72ccaaf1531101651cb892ba0e721d70e30ad1d7c967ceeb586f55f6ddd92",
-                "sha256:e5104cb11c437aec7f51e05a07f8c68d7f9b7c4cc36afc52edd8b0f71d84d63a"
+                "sha256:5138c460eb4590e5d0d0a931bb4353e22f24921a6fdc275b2c0dc8708a7da3bc",
+                "sha256:d63b72df37000c72378cb1ae0f48a5ba6410ce650717d81d818e528208eecf91"
             ],
             "index": "pypi",
-            "version": "==5.0.6"
+            "version": "==5.0.7"
         },
         "bracex": {
             "hashes": [
@@ -326,18 +326,18 @@
         },
         "rich": {
             "hashes": [
-                "sha256:01b3fcc305ae71b9ade4a645b6e371d395c6cd9ba52dcf180bfba69ef05c13b5",
-                "sha256:4674bd3056a72bb282ad581e3f8092dc110cdcc456b5ba76e34965cb85a69724"
+                "sha256:60cd6d6ea697a1704f2057e791e3062b506b5c74a6e2ad2ced71eccb37557259",
+                "sha256:8f05431091601888c50341697cfc421dc398ce37b12bca0237388ef9c7e2c9e9"
             ],
-            "version": "==10.0.0"
+            "version": "==10.1.0"
         },
         "ruamel.yaml": {
             "hashes": [
-                "sha256:0850def9ebca23b3a8c64c4b4115ebb6b364a10d49f89d289a26ee965e1e7d9d",
-                "sha256:8f1e15421668b9edf30ed02899f5f81aff9808a4271935776f61a99a569a13da"
+                "sha256:44bc6b54fddd45e4bc0619059196679f9e8b79c027f4131bb072e6a22f4d5e28",
+                "sha256:ac79fb25f5476e8e9ed1c53b8a2286d2c3f5dde49eb37dbcee5c7eb6a8415a22"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==0.17.2"
+            "version": "==0.17.4"
         },
         "ruamel.yaml.clib": {
             "hashes": [
@@ -375,6 +375,20 @@
             ],
             "markers": "platform_python_implementation == 'CPython' and python_version < '3.10'",
             "version": "==0.2.2"
+        },
+        "six": {
+            "hashes": [
+                "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259",
+                "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"
+            ],
+            "version": "==1.15.0"
+        },
+        "tenacity": {
+            "hashes": [
+                "sha256:5bd16ef5d3b985647fe28dfa6f695d343aa26479a04e8792b9d3c8f49e361ae1",
+                "sha256:a0ce48587271515db7d3a5e700df9ae69cce98c4b57c23a4886da15243603dd8"
+            ],
+            "version": "==7.0.0"
         },
         "typing-extensions": {
             "hashes": [
