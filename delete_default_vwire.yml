@@ -29,7 +29,7 @@
 
   tasks:
     - name: Delete Security Rule "rule1"
-      panos_type_cmd:
+      paloaltonetworks.panos.panos_type_cmd:
         provider: '{{ device }}'
         cmd: delete
         xpath: |
@@ -38,7 +38,7 @@
           /entry[@name='rule1']
 
     - name: Delete Virtual Wire "default-vwire"
-      panos_type_cmd:
+      paloaltonetworks.panos.panos_type_cmd:
         provider: '{{ device }}'
         cmd: delete
         xpath: |
@@ -46,7 +46,7 @@
           /network/virtual-wire/entry[@name='default-vwire']
 
     - name: Delete Zone "trust"
-      panos_type_cmd:
+      paloaltonetworks.panos.panos_type_cmd:
         provider: '{{ device }}'
         cmd: delete
         xpath: |
@@ -55,7 +55,7 @@
           /zone/entry[@name='trust']
 
     - name: Delete Zone "untrust"
-      panos_type_cmd:
+      paloaltonetworks.panos.panos_type_cmd:
         provider: '{{ device }}'
         cmd: delete
         xpath: |
@@ -64,7 +64,7 @@
           /zone/entry[@name='untrust']
 
     - name: Delete interface "ethernet1/1"
-      panos_type_cmd:
+      paloaltonetworks.panos.panos_type_cmd:
         provider: '{{ device }}'
         cmd: delete
         xpath: |
@@ -72,7 +72,7 @@
           /network/interface/ethernet/entry[@name='ethernet1/1']
 
     - name: Delete interface "ethernet1/2"
-      panos_type_cmd:
+      paloaltonetworks.panos.panos_type_cmd:
         provider: '{{ device }}'
         cmd: delete
         xpath: |
