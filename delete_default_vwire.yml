@@ -1,0 +1,68 @@
+---
+
+- name: Delete the factory default configuration from all firewalls
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  roles:
+    - role: PaloAltoNetworks.paloaltonetworks
+
+  vars:
+    provider:
+      ip_address: '{{ ansible_host }}'
+      port: '{{ port }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+
+  tasks:
+    - name: Delete Security Rule "rule1"
+      panos_type_cmd:
+        provider: '{{ provider }}'
+        cmd: delete
+        xpath: |
+          /config/devices/entry[@name='localhost.localdomain']
+          /vsys/entry[@name='vsys1']/rulebase/security/rules
+          /entry[@name='rule1']
+
+    - name: Delete Virtual Wire "default-vwire"
+      panos_type_cmd:
+        provider: '{{ provider }}'
+        cmd: delete
+        xpath: |
+          /config/devices/entry[@name='localhost.localdomain']
+          /network/virtual-wire/entry[@name='default-vwire']
+
+    - name: Delete Zone "trust"
+      panos_type_cmd:
+        provider: '{{ provider }}'
+        cmd: delete
+        xpath: |
+          /config/devices/entry[@name='localhost.localdomain']
+          /vsys/entry[@name='vsys1']
+          /zone/entry[@name='trust']
+
+    - name: Delete Zone "untrust"
+      panos_type_cmd:
+        provider: '{{ provider }}'
+        cmd: delete
+        xpath: |
+          /config/devices/entry[@name='localhost.localdomain']
+          /vsys/entry[@name='vsys1']
+          /zone/entry[@name='untrust']
+
+    - name: Delete interface "ethernet1/1"
+      panos_type_cmd:
+        provider: '{{ provider }}'
+        cmd: delete
+        xpath: |
+          /config/devices/entry[@name='localhost.localdomain']
+          /network/interface/ethernet/entry[@name='ethernet1/1']
+
+    - name: Delete interface "ethernet1/2"
+      panos_type_cmd:
+        provider: '{{ provider }}'
+        cmd: delete
+        xpath: |
+          /config/devices/entry[@name='localhost.localdomain']
+          /network/interface/ethernet/entry[@name='ethernet1/2']
