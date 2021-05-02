@@ -1,4 +1,4 @@
-# ansible-playbooks
+# pan-ansible-playbooks
 
 [![ansible-lint](https://github.com/PaloAltoNetworks/ansible-playbooks/workflows/ansible-lint/badge.svg)](https://github.com/PaloAltoNetworks/ansible-playbooks/actions?query=workflow%3Aansible-lint)
 
