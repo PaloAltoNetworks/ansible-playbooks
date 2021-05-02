@@ -1,4 +1,23 @@
 ---
+# delete_default_vwire.yml - Deletes the default virtual wire configuration from a new device.
+#
+# Description
+# ===========
+#
+# Deletes the default virtual wire configuration from a new device. Useful to clean configuration from factory default
+# settings like 'rule1' security rule, 'trust' and 'untrust' zones and interface configuration.
+#
+# This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or extra vars.
+#
+# Usage
+# =====
+#
+#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
+#           definition of host variables.  Default value is 'firewall'.
+#
+
+---
 
 - name: Delete the factory default configuration from all firewalls
   hosts: all
