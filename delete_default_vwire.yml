@@ -5,7 +5,7 @@
 # ===========
 #
 # Deletes the default virtual wire configuration from a new device. Useful to clean configuration from factory default
-# settings like 'rule1' security rule, 'trust' and 'untrust' zones and interface configuration.
+# settings like 'rule1' security rule, 'trust' and 'untrust' zones and virtual wire interface configuration.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
 # and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or extra vars.
@@ -17,27 +17,20 @@
 #           definition of host variables.  Default value is 'firewall'.
 #
 
----
-
-- name: Delete the factory default configuration from all firewalls
-  hosts: all
-  gather_facts: no
+- hosts: '{{ target | default("firewall") }}'
   connection: local
 
-  roles:
-    - role: PaloAltoNetworks.paloaltonetworks
-
   vars:
-    provider:
-      ip_address: '{{ ansible_host }}'
-      port: '{{ port }}'
-      username: '{{ username }}'
-      password: '{{ password }}'
+    device:
+      ip_address: '{{ ip_address }}'
+      username: '{{ username | default(omit) }}'
+      password: '{{ password | default(omit) }}'
+      api_key: '{{ api_key | default(omit) }}'
 
   tasks:
     - name: Delete Security Rule "rule1"
       panos_type_cmd:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: delete
         xpath: |
           /config/devices/entry[@name='localhost.localdomain']
@@ -46,7 +39,7 @@
 
     - name: Delete Virtual Wire "default-vwire"
       panos_type_cmd:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: delete
         xpath: |
           /config/devices/entry[@name='localhost.localdomain']
@@ -54,7 +47,7 @@
 
     - name: Delete Zone "trust"
       panos_type_cmd:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: delete
         xpath: |
           /config/devices/entry[@name='localhost.localdomain']
@@ -63,7 +56,7 @@
 
     - name: Delete Zone "untrust"
       panos_type_cmd:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: delete
         xpath: |
           /config/devices/entry[@name='localhost.localdomain']
@@ -72,7 +65,7 @@
 
     - name: Delete interface "ethernet1/1"
       panos_type_cmd:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: delete
         xpath: |
           /config/devices/entry[@name='localhost.localdomain']
@@ -80,7 +73,7 @@
 
     - name: Delete interface "ethernet1/2"
       panos_type_cmd:
-        provider: '{{ provider }}'
+        provider: '{{ device }}'
         cmd: delete
         xpath: |
           /config/devices/entry[@name='localhost.localdomain']
