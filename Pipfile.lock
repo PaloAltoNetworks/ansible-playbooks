@@ -16,18 +16,18 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:2783947ec34dd84fc36093e8fc8a9a24679cf912a97bc9a0c47f4966ed059a29",
-                "sha256:6b4a79691a48740816f03c4cb1e8ef46f8335ad2019d9c4a95da73eb5cb98f05"
+                "sha256:d856a71d74351649ca8dd59ad17c8c3e79ea57734ff4a38a97611e1e10b06863",
+                "sha256:da1b2c884dbf56cc3ece07940a7b654f41a93b9fc40ee1ed21a76da25a05989c"
             ],
             "index": "pypi",
-            "version": "==1.17.57"
+            "version": "==1.17.62"
         },
         "botocore": {
             "hashes": [
-                "sha256:ae4ac72921f23d35ad54a5fb0989fc00c6fff8a39e24f26128b9315cc6209fec",
-                "sha256:fa430bc773363a3d332c11c55bd8c0c0a5819d576121eb6990528a1bdaa89bcd"
+                "sha256:e4f8cb923edf035c2ae5f6169c70e77e31df70b88919b92b826a6b9bd14511b1",
+                "sha256:f7c2c5c5ed5212b2628d8fb1c587b31c6e8d413ecbbd1a1cdf6f96ed6f5c8d5e"
             ],
-            "version": "==1.20.57"
+            "version": "==1.20.62"
         },
         "jmespath": {
             "hashes": [
@@ -392,11 +392,11 @@
         },
         "typing-extensions": {
             "hashes": [
-                "sha256:7cb407020f00f7bfc3cb3e7881628838e69d8f3fcab2f64742a5e76b2f841918",
-                "sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c",
-                "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"
+                "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497",
+                "sha256:50b6f157849174217d0656f99dc82fe932884fb250826c18350e159ec6cdf342",
+                "sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84"
             ],
-            "version": "==3.7.4.3"
+            "version": "==3.10.0.0"
         },
         "wcmatch": {
             "hashes": [
