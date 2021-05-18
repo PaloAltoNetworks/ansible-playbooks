@@ -16,18 +16,17 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:2f0d76660d484ff4c8c2efe9171c1281b38681e6806f87cf100e822432eda11e",
-                "sha256:cbaa8df5faf81730f117bfa0e3fcda68ec3fa9449a05847aa6140a3f4c087765"
+                "sha256:0a21893db156c0938d0a06b622c3dd3d2da2dcd9d06d343c8f9536ac9de4ec7f"
             ],
             "index": "pypi",
-            "version": "==1.17.69"
+            "version": "==1.17.74"
         },
         "botocore": {
             "hashes": [
-                "sha256:4b4aa58c61d4b125bc6ec1597924b2749e19de8f2c9a374ac087aa2561e71828",
-                "sha256:69dc0b6fdc0855f5a4f8b1d29c96b9cec44e71054fea0f968e5904d6ccfd4fd9"
+                "sha256:2061cf3d17615aa4114c91dbed8917adc5287a88354a7693c96aa8e9f9dedd6e",
+                "sha256:6937954ce6dabc00eb157e9fbd21edd45b4dfe3de738e68dbca4c042bfda0954"
             ],
-            "version": "==1.20.73"
+            "version": "==1.20.74"
         },
         "jmespath": {
             "hashes": [
@@ -308,10 +307,10 @@
         },
         "rich": {
             "hashes": [
-                "sha256:2701b69b9646a12b05d80f9d96a48615d4b68678fbfa67a60aa2834a62ad01e7",
-                "sha256:a30429d82363d42e7c64e324c2c8735c045f190cba609feee91a7b9f563a64b5"
+                "sha256:0ea4ece572d6fa94c40983bbf49c6fdce01b9790558c3645f2e1736bb91cdc0b",
+                "sha256:34865558d322f7151a3012357caa3622df966e51d7a639e4b1fd1b3675b302fc"
             ],
-            "version": "==10.2.0"
+            "version": "==10.2.1"
         },
         "ruamel.yaml": {
             "hashes": [
