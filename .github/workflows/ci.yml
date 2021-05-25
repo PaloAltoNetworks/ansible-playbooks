@@ -24,9 +24,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-v2-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-pipenv-v3-${{ hashFiles('**/Pipfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pipenv-v2-
+            ${{ runner.os }}-pipenv-v3-
 
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
