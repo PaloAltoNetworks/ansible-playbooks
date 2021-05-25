@@ -92,16 +92,16 @@
     "develop": {
         "ansible": {
             "hashes": [
-                "sha256:ca34e2c0c3f92cad5e528c94c133e620845feb11cc62f42e98d28271fe5bd924"
+                "sha256:6f67ca5c634e4721d1f8e206dc71d60d1a114d147945355bfc902bd37eb07080"
             ],
             "index": "pypi",
-            "version": "==3.4.0"
+            "version": "==4.0.0"
         },
-        "ansible-base": {
+        "ansible-core": {
             "hashes": [
-                "sha256:7744b68ed81de948853304b8104b63651c5d6b03571aee972c83379aa6b7de10"
+                "sha256:7e75827a94d47d1c3e1930d708f0ef637a3ab9a21f757aaf55deab6e9f47c682"
             ],
-            "version": "==2.10.10"
+            "version": "==2.11.1"
         },
         "ansible-lint": {
             "hashes": [
@@ -317,6 +317,13 @@
                 "sha256:fe69978f3f768926cfa37b867e3843918e012cf83f680806599ddce33c2c68b0"
             ],
             "version": "==5.4.1"
+        },
+        "resolvelib": {
+            "hashes": [
+                "sha256:123de56548c90df85137425a3f51eb93df89e2ba719aeb6a8023c032758be950",
+                "sha256:b0143b9d074550a6c5163a0f587e49c49017434e3cdfe853941725f5455dd29c"
+            ],
+            "version": "==0.5.5"
         },
         "rich": {
             "hashes": [
