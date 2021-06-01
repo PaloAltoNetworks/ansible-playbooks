@@ -16,11 +16,11 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:1815748c9409e6d9a13a88a4f59c49d42c5d873a116c95ef18092ed3bd20b1c5",
-                "sha256:ccc2c2e412d31b9e542c525764c059f7523cf5268b0ce3c5b244f4df29367d9c"
+                "sha256:1d24c6d1f5db4b52bb29f1dfe13fd3e9d95d9fa4634b0638a096f5a884173cde",
+                "sha256:8ee8766813864796be6c87ad762c6da4bfef603977931854a38f49fe4db06495"
             ],
             "index": "pypi",
-            "version": "==1.17.79"
+            "version": "==1.17.84"
         },
         "botocore": {
             "hashes": [
@@ -334,11 +334,11 @@
         },
         "ruamel.yaml": {
             "hashes": [
-                "sha256:97f71cdda0e7d2cdeba67812a90a160b23290095a1625d8d14e831f783a7bab6",
-                "sha256:b41919284c5387b949c1956145917e14060a0f74f1adc9a00c6bd6194f16e615"
+                "sha256:25c3eaf4f0c52bd15c50c39b100a32168891240f4d2177a4690d5d9b85944bbe",
+                "sha256:5c3fa739bbedd2f23769656784e671c6335d17a5bf163c3c3901d8663c0af287"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==0.17.5"
+            "version": "==0.17.7"
         },
         "ruamel.yaml.clib": {
             "hashes": [
