@@ -97,10 +97,10 @@
     "develop": {
         "ansible": {
             "hashes": [
-                "sha256:f561cca7fbc4daa14d98e18cd0cb74bd8b173f1501b8fa11543f6ef002de3167"
+                "sha256:737d819ffbd7a80c28795b4edd93e59ad21e6e6d53af0d19f57412814f9260d0"
             ],
             "index": "pypi",
-            "version": "==4.1.0"
+            "version": "==4.2.0"
         },
         "ansible-core": {
             "hashes": [
