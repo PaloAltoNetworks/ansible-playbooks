@@ -40,11 +40,11 @@
         },
         "pan-os-python": {
             "hashes": [
-                "sha256:e90ca5c66e0514b7745269cd6ff76f404dd0751bc6baefa8d950a8938075143b",
-                "sha256:f599df2a066480ff1ccb535394f249dd5ac325e4b743b14428c65df4c76552d3"
+                "sha256:172c14981379473e70efe725f38b64ba75b1b735d659975a3711497b09ab0fa3",
+                "sha256:5e36490c3536650bf4c6f91af9b18a53fe10fce7d46769f7e78b72ec0f58cd3c"
             ],
             "index": "pypi",
-            "version": "==1.3.0"
+            "version": "==1.4.0"
         },
         "pan-python": {
             "hashes": [
