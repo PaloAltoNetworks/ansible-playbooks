@@ -24,11 +24,11 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:204327b9a33e3ae5207ff9acdd7d3b6d1f99f5dc9165a4d843d6f1a566f3006c",
-                "sha256:b321b570a0da4c6280e737d817c8f740bce0ef914f564e1c27246c7ae76b4c31"
+                "sha256:1b4999fb0e1a4c050c4d9118ebdaac8d83761ef32c3c0f13a25f9204045998fe",
+                "sha256:ec2cdf1c8ed64a7f392f352125d248c76103fa9d137b275b7c76836776cedf56"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==1.21.33"
+            "version": "==1.21.34"
         },
         "jmespath": {
             "hashes": [
@@ -98,10 +98,10 @@
     "develop": {
         "ansible": {
             "hashes": [
-                "sha256:aeb0007a18e8914dd3ffe0acb2c4377f2d1f25e01c39e845c6cb8b16bdc1018b"
+                "sha256:cc5352b2351a381015ece79eab783a1b0668f97b377810fed3c746e2f1d50db1"
             ],
             "index": "pypi",
-            "version": "==4.3.0"
+            "version": "==4.5.0"
         },
         "ansible-core": {
             "hashes": [
