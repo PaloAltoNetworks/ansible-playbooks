@@ -8,6 +8,7 @@ pan-python = "*"
 xmltodict = "*"
 boto3 = "*"
 pan-os-python = "*"
+paramiko = "*"
 
 [dev-packages]
 ansible = "*"
