@@ -124,8 +124,9 @@
       register: primary_state_sync
       retries: 10
       delay: 30
-      until: ( primary_state_sync.stdout | from_json).response.result.group["local-info"].state == 'passive' and
-             ( primary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == 'Complete'
+      until: '"state" in ( primary_state_sync.stdout | from_json).response.result.group["local-info"] and
+             ( primary_state_sync.stdout | from_json).response.result.group["local-info"].state == "passive" and
+             ( primary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == "Complete"'
 
     - name: Pause for verification
       pause:
@@ -176,5 +177,6 @@
       register: secondary_state_sync
       retries: 10
       delay: 30
-      until: ( secondary_state_sync.stdout | from_json).response.result.group["local-info"].state == 'passive' and
-             ( secondary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == 'Complete'
+      until: '"state" in ( secondary_state_sync.stdout | from_json).response.result.group["local-info"] and 
+             ( secondary_state_sync.stdout | from_json).response.result.group["local-info"].state == "passive" and
+             ( secondary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == "Complete"'
