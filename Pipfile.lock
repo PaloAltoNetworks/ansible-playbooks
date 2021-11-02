@@ -37,11 +37,11 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:3818c7bf7ae801f81ae2f7d332efd4e42e00c8ef11b695895fb0fd499be09b3c",
-                "sha256:d7c190ed4e1ddb24f9872a0641b28da4afc04b6b993f0ec3dd5224a847df5519"
+                "sha256:842dc2b887ab9ce5e937bc5954116736a1f3d3b7f1948b0027a671509e0d81ca",
+                "sha256:89c48ac82cd3d814dd459428144a124e42acca80431c77813b7ac29f8fac3456"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==1.22.7"
+            "version": "==1.22.8"
         },
         "cffi": {
             "hashes": [
@@ -232,10 +232,10 @@
     "develop": {
         "ansible": {
             "hashes": [
-                "sha256:2955fcbf51367f8bd88c38a86f8be83d4fcd05f778afb4feed31abfe8dcff639"
+                "sha256:1345fa61c9ac2edcc6c16e0d3f872a73303a61b799a7f16236ca6279e0ae8e36"
             ],
             "index": "pypi",
-            "version": "==4.6.0"
+            "version": "==4.8.0"
         },
         "ansible-core": {
             "hashes": [
