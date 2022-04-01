@@ -21,7 +21,7 @@ jobs:
 
       - name: Check pipenv cache
         id: cache-pipenv
-        uses: actions/cache@v2
+        uses: actions/cache@v3.0.1
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-v3-${{ hashFiles('**/Pipfile.lock') }}
