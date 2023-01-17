@@ -5,10 +5,10 @@
 # ===========
 #
 # Performs a major version upgrade (i.e. 8.1.12 -> 9.0.5) on a PAN-OS HA pair.  This playbook simply imports the other
-# playbooks in this repository making up the parts of this process (content upgrade, download base image, install 
+# playbooks in this repository making up the parts of this process (content upgrade, download base image, install
 # target version).
 #
-# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables
 # 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
 # (see `host_vars/ha_pair.yml` for an example) or extra vars.
 #
@@ -38,12 +38,12 @@
 
 - import_playbook: upgrade_content.yml
   vars:
-    sync_to_peer: True
+    sync_to_peer: true
 
 - import_playbook: download_panos_version.yml
   vars:
     version: '{{ base_version }}'
-    sync_to_peer: True
+    sync_to_peer: true
 
 - import_playbook: upgrade_ha.yml
   vars:

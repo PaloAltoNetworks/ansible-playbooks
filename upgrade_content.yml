@@ -7,7 +7,7 @@
 # Upgrades the content version on a PAN-OS device or HA pair.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Usage
@@ -36,7 +36,7 @@
       password: '{{ password | default(omit) }}'
       api_key: '{{ api_key | default(omit) }}'
 
-    sync_to_peer: False
+    sync_to_peer: false
 
   tasks:
     - name: Check latest content
@@ -44,7 +44,7 @@
         provider: '{{ device }}'
         cmd: 'request content upgrade check'
       register: check
-      changed_when: False
+      changed_when: false
 
     - name: Download latest content
       paloaltonetworks.panos.panos_op:
@@ -54,7 +54,7 @@
           <latest></latest>
           {% if sync_to_peer %}<sync-to-peer>yes</sync-to-peer>{% endif %}
           </download></upgrade></content></request>
-        cmd_is_xml: True
+        cmd_is_xml: true
       register: download
 
     - name: Check content download result
@@ -74,7 +74,7 @@
           <version>latest</version>
           {% if sync_to_peer %}<sync-to-peer>yes</sync-to-peer>{% endif %}
           </install></upgrade></content></request>
-        cmd_is_xml: True
+        cmd_is_xml: true
       register: install
 
     - name: Check content install result

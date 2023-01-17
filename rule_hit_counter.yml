@@ -7,7 +7,7 @@
 # Loops until the hit counter increments on a specific rule in the rule base.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Modules Used
@@ -43,7 +43,7 @@
           <rule-base><entry name='{{ rule_base }}'>
           <rules><list><member>{{ rule_name }}</member></list></rules>
           </entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>
-        cmd_is_xml: True
+        cmd_is_xml: true
       changed_when: false
       register: initial
 
@@ -55,7 +55,7 @@
           <rule-base><entry name='{{ rule_base }}'>
           <rules><list><member>{{ rule_name }}</member></list></rules>
           </entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>
-        cmd_is_xml: True
+        cmd_is_xml: true
       changed_when: false
       register: final
       retries: 30
@@ -65,7 +65,7 @@
              ((initial.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] | int)
 
     - name: Display hit counts
-      debug:
+      ansible.builtin.debug:
         msg: "Initial count: {{ initial_count | int }}, final count: {{ final_count | int }}."
       vars:
         initial_count: '{{ (initial.stdout | from_json).response.result["rule-hit-count"].vsys.entry["rule-base"].entry.rules.entry["hit-count"] }}'

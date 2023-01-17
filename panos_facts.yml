@@ -7,7 +7,7 @@
 # Uses the 'panos_facts' module to gather data about a PAN-OS device.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Modules Used
@@ -36,6 +36,5 @@
         provider: '{{ device }}'
 
     - name: Display model, PAN-OS version
-      debug:
+      ansible.builtin.debug:
         msg: "Model: {{ ansible_facts['net_model'] }}, version: {{ ansible_facts['net_version'] }}"
-

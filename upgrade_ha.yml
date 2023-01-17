@@ -5,10 +5,10 @@
 # ===========
 #
 # Upgrades a PAN-OS HA pair to the specified version.  Upgrade must be a single step (i.e. 8.1.7 to 8.1.12).  For major
-# version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the 
+# version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the
 # 'download_panos_image.yml' playbook.
 #
-# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables
 # 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
 # (see `host_vars/ha_pair.yml` for an example) or extra vars.
 #
@@ -57,7 +57,7 @@
     # pause_mid_upgrade - Optionally pause for additional verification during upgrade.  This playbook will perform
     #                     basic checks for HA status and session sync, but this will wait for manual verification before
     #                     upgrading the secondary firewall.
-    pause_mid_upgrade: False
+    pause_mid_upgrade: false
 
   tasks:
     - name: Backup device config (primary)
@@ -104,7 +104,7 @@
         restart: true
 
     - name: Pause for restart
-      pause:
+      ansible.builtin.pause:
         seconds: 30
 
     - name: Chassis ready (primary)
@@ -129,7 +129,7 @@
              ( primary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == "Complete"'
 
     - name: Pause for verification
-      pause:
+      ansible.builtin.pause:
         prompt: 'Primary upgrade complete.  Pausing for verification.'
       when: pause_mid_upgrade
 
@@ -157,7 +157,7 @@
         restart: true
 
     - name: Pause for restart
-      pause:
+      ansible.builtin.pause:
         seconds: 30
 
     - name: Chassis ready (secondary)
@@ -177,6 +177,6 @@
       register: secondary_state_sync
       retries: 10
       delay: 30
-      until: '"state" in ( secondary_state_sync.stdout | from_json).response.result.group["local-info"] and 
+      until: '"state" in ( secondary_state_sync.stdout | from_json).response.result.group["local-info"] and
              ( secondary_state_sync.stdout | from_json).response.result.group["local-info"].state == "passive" and
              ( secondary_state_sync.stdout | from_json).response.result.group["local-info"]["state-sync"] == "Complete"'

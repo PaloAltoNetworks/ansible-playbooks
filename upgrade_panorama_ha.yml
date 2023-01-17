@@ -4,11 +4,11 @@
 # Description
 # ===========
 #
-# Upgrades a Panorama HA pair to the specified version.  Upgrade must be a single step (i.e. 8.1.7 to 8.1.12).  For 
+# Upgrades a Panorama HA pair to the specified version.  Upgrade must be a single step (i.e. 8.1.7 to 8.1.12). For
 # major version upgrades requiring a base image to be downloaded to the device prior to performing the upgrade, see the
 # 'download_panos_image.yml' playbook.
 #
-# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables
 # 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
 # (see `host_vars/panorama_ha_pair.yml` for an example) or extra vars.
 #
@@ -56,11 +56,11 @@
     # pause_mid_upgrade - Optionally pause for additional verification during upgrade.  This playbook will perform
     #                     basic checks for HA status and session sync, but this will wait for manual verification before
     #                     upgrading the secondary firewall.
-    pause_mid_upgrade: False
+    pause_mid_upgrade: false
 
     # major_version_upgrade - Handles special case when one Panorama is on a different major version.  Should only be
     #                         set to true when performing a major version upgrade.
-    major_version_upgrade: False
+    major_version_upgrade: false
 
   tasks:
     - name: Backup device config (primary)
@@ -107,7 +107,7 @@
         restart: true
 
     - name: Pause for restart
-      pause:
+      ansible.builtin.pause:
         seconds: 30
 
     - name: Check that primary is up and passive
@@ -138,7 +138,7 @@
       when: major_version_upgrade|bool
 
     - name: Pause for verification
-      pause:
+      ansible.builtin.pause:
         prompt: 'Primary upgrade complete.  Pausing for verification.'
       when: pause_mid_upgrade
 
@@ -166,7 +166,7 @@
         restart: true
 
     - name: Pause for restart
-      pause:
+      ansible.builtin.pause:
         seconds: 30
 
     - name: Check that secondary is up and passive

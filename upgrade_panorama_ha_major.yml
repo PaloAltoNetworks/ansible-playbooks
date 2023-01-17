@@ -8,7 +8,7 @@
 # playbooks in this repository making up the parts of this process (content upgrade, download base image, install
 # target version).
 #
-# This playbook requires connection details for the two members of the HA pair to be specified in the variables 
+# This playbook requires connection details for the two members of the HA pair to be specified in the variables
 # 'primary_ip_address', 'secondary_ip_address', 'username', and 'password'.  These may be defined as host variables
 # (see `host_vars/panorama_ha_pair.yml` for an example) or extra vars.
 #
@@ -38,14 +38,14 @@
 
 - import_playbook: upgrade_content.yml
   vars:
-    sync_to_peer: True
+    sync_to_peer: true
 
 - import_playbook: download_panos_version.yml
   vars:
     version: '{{ base_version }}'
-    sync_to_peer: True
+    sync_to_peer: true
 
 - import_playbook: upgrade_panorama_ha.yml
   vars:
     version: '{{ target_version }}'
-    major_version_upgrade: True
+    major_version_upgrade: true
