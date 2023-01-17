@@ -8,6 +8,6 @@ Destination Zone: {{ session.to }}
 Destination: {{ session.dst }}
 Destination Port: {{ session.dport }}
 Application: {{ session.application }}
-Security Rule: {{ session['security-rule'] }}
+Security Rule: {{ session['security-rule'] | default('NONE')}}
 
 {% endfor %}
