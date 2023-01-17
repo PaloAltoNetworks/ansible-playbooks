@@ -49,6 +49,7 @@
       username: '{{ username | default(omit) }}'
       password: '{{ password | default(omit) }}'
       api_key: '{{ api_key | default(omit) }}'
+    aws_spec_file_location: "spec/aws_vpn_spec.yml"
 
     untrust_interface: 'ethernet1/1'
     trust_interface: 'ethernet1/2'
@@ -83,7 +84,7 @@
 
     - name: set_fact
       ansible.builtin.set_fact:
-        parsed: "{{ vpn_conn_facts.vpn_connections[0].customer_gateway_configuration | parse_xml('spec/aws_vpn_spec.yml') }}"
+        parsed: "{{ vpn_conn_facts.vpn_connections[0].customer_gateway_configuration | ansible.netcommon.parse_xml(aws_spec_file_location) }}"
 
     - name: Create IKE crypto profiles
       paloaltonetworks.panos.panos_ike_crypto_profile:
