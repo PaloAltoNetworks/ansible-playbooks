@@ -13,7 +13,7 @@
 # Usage
 # =====
 #
-#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample 
+#   target: Target PAN-OS device, as named in the inventory.  See `host_vars/firewall.yml` for sample
 #           definition of host variables.  Default value is 'firewall'.
 #
 #   version: Version to download to device.
@@ -31,7 +31,7 @@
       password: '{{ password | default(omit) }}'
       api_key: '{{ api_key | default(omit) }}'
 
-    sync_to_peer: False
+    sync_to_peer: false
 
   tasks:
     - name: Download PAN-OS version
@@ -42,4 +42,3 @@
         download: true
         install: false
         restart: false
-

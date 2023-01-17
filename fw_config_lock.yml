@@ -8,7 +8,7 @@
 # there are no active config locks before continuing.
 #
 # This playbook requires connection details for the device to be specified in the variables 'ip_address', 'username',
-# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or 
+# and 'password'.  These may be defined as host variables (see `host_vars/firewall.yml` for an example) or
 # extra vars.
 #
 # Modules Used
@@ -51,7 +51,7 @@
         cmd_is_xml: true
 
     - name: Change configuration here.
-      debug:
+      ansible.builtin.debug:
         msg: 'Configuration would be changed here'
 
     - name: Release config lock
