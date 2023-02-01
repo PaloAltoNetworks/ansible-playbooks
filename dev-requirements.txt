@@ -16,7 +16,7 @@ jsonschema==4.17.3
 markupsafe==2.1.1
 mypy-extensions==0.4.3
 packaging==23.0
-pathspec==0.10.3
+pathspec==0.11.0
 platformdirs==2.6.2
 pycparser==2.21
 pygments==2.14.0
