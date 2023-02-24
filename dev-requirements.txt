@@ -1,7 +1,7 @@
 -i https://pypi.org/simple
 ansible==7.1.0
 ansible-compat==2.2.7
-ansible-core==2.14.1
+ansible-core==2.14.2
 ansible-lint==6.10.2
 attrs==22.2.0
 black==22.12.0
