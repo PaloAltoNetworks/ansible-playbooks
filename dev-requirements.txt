@@ -26,7 +26,7 @@ resolvelib==0.8.1
 rich==13.3.1
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.7
-setuptools==66.0.0
+setuptools==67.8.0
 subprocess-tee==0.4.1
 tomli==2.0.1
 wcmatch==8.4.1
