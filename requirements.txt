@@ -11,7 +11,7 @@ paramiko==2.12.0
 pycparser==2.21
 pynacl==1.5.0
 python-dateutil==2.8.2
-s3transfer==0.6.0
+s3transfer==0.6.1
 six==1.16.0
 urllib3==1.26.14
 xmltodict==0.13.0
