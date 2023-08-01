@@ -19,7 +19,7 @@ packaging==23.1
 pathspec==0.11.0
 platformdirs==2.6.2
 pycparser==2.21
-pygments==2.14.0
+pygments==2.15.0
 pyrsistent==0.19.3
 pyyaml==6.0
 resolvelib==0.8.1
