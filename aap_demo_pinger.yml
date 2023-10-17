@@ -5,12 +5,15 @@
 
   vars:
     sleep_timer: 1 # Units are seconds
-    ping_count: 1  # Number of pings to attempt
+    ping_count: 1 # Number of pings to attempt
 
   tasks:
-
     - name: Wait/sleep if needed
       ansible.builtin.command: sleep {{ sleep_timer }}
+      register: my_output
+      changed_when: my_output.rc != 0
 
     - name: Ping across VPN to AWS - shell
       ansible.builtin.command: ping 172.31.100.158 -c {{ ping_count }}
+      register: my_output
+      changed_when: my_output.rc != 0

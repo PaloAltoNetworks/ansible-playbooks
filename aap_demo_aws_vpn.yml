@@ -3,12 +3,12 @@
 #
 # Description
 # ===========
-# 
+#
 # Used for a live demo during a live webinar:
 # https://register.paloaltonetworks.com/automateyourpaloaltonetworksfi1
 # and
 # https://www.youtube.com/watch?v=JKcBP7RbjHQ&t=7s
-# 
+#
 # This playbook builds both sides of an IPsec VPN, the AWS side and
 # the PAN-OS side, and the tunnel monitor ensures the tunnel comes up
 # automatically as soon as both sides of the VPN configurations are
@@ -31,14 +31,14 @@
 
     # AWS VPN default settings
     ike_settings:
-      dhgroup: "group2"
-      authentication: "sha1"
+      dhgroup: group2
+      authentication: sha1
       lifetime_sec: "28800"
-      encryption: "aes-128-cbc"
+      encryption: aes-128-cbc
     ipsec_settings:
-      authentication: "sha1"
-      encryption: "aes-128-cbc"
-      dhgroup: "group2"
+      authentication: sha1
+      encryption: aes-128-cbc
+      dhgroup: group2
       lifetime_seconds: "28800"
 
   tasks:
@@ -117,24 +117,24 @@
       paloaltonetworks.panos.panos_ike_gateway:
         provider: "{{ device }}"
         name: "{{ item.name }}"
-        protocol_version: "ikev1"
+        protocol_version: ikev1
         interface: "{{ external_interface }}"
         dead_peer_detection: true
         dead_peer_detection_interval: "10"
         dead_peer_detection_retry: "3"
         psk: "{{ item.psk }}"
         peer_ip_value: "{{ item.peer_ip }}"
-        ikev1_exchange_mode: "main"
+        ikev1_exchange_mode: main
         crypto_profile_name: "{{ item.crypto_profile_name }}"
         enable_passive_mode: "no"
         enable_nat_traversal: true
         commit: false
       with_items:
-        - name: "ike-{{ vpn_id }}-0"
+        - name: ike-{{ vpn_id }}-0
           peer_ip: "{{ parsed.aws_vpn[0].peer_1_outside_ip }}"
           psk: "{{ parsed.aws_vpn[0].psk_1 }}"
           crypto_profile_name: "{{ vpn_id }}-0"
-        - name: "ike-{{ vpn_id }}-1"
+        - name: ike-{{ vpn_id }}-1
           peer_ip: "{{ parsed.aws_vpn[0].peer_2_outside_ip }}"
           psk: "{{ parsed.aws_vpn[0].psk_2 }}"
           crypto_profile_name: "{{ vpn_id }}-1"
@@ -149,8 +149,8 @@
         lifetime_seconds: "{{ ipsec_settings.lifetime_seconds }}"
         commit: false
       with_items:
-        - "ipsec-{{ vpn_id }}-0"
-        - "ipsec-{{ vpn_id }}-1"
+        - ipsec-{{ vpn_id }}-0
+        - ipsec-{{ vpn_id }}-1
 
     - name: Create tunnel interfaces
       paloaltonetworks.panos.panos_tunnel:
@@ -182,17 +182,17 @@
         ipsec_profile: "{{ item.ipsec_profile }}"
         enable_tunnel_monitor: "yes"
         tunnel_monitor_dest_ip: "{{ item.tunnel_monitor_dest_ip }}"
-        tunnel_monitor_profile: "default"
+        tunnel_monitor_profile: default
         commit: false
       with_items:
-        - name: "ipsec-tunnel-1"
-          ike_gtw_name: "ike-{{ vpn_id }}-0"
-          ipsec_profile: "ipsec-{{ vpn_id }}-0"
+        - name: ipsec-tunnel-1
+          ike_gtw_name: ike-{{ vpn_id }}-0
+          ipsec_profile: ipsec-{{ vpn_id }}-0
           tunnel_interface: "{{ tunnel_if_1 }}"
           tunnel_monitor_dest_ip: "{{ parsed.aws_vpn[0].peer_1_inside_ip }}"
-        - name: "ipsec-tunnel-2"
-          ike_gtw_name: "ike-{{ vpn_id }}-1"
-          ipsec_profile: "ipsec-{{ vpn_id }}-1"
+        - name: ipsec-tunnel-2
+          ike_gtw_name: ike-{{ vpn_id }}-1
+          ipsec_profile: ipsec-{{ vpn_id }}-1
           tunnel_interface: "{{ tunnel_if_2 }}"
           tunnel_monitor_dest_ip: "{{ parsed.aws_vpn[0].peer_2_inside_ip }}"
 
@@ -225,11 +225,11 @@
         connection_keep_alive_interval: "10"
         commit: false
       with_items:
-        - name: "amazon-{{ vpn_id }}-0"
+        - name: amazon-{{ vpn_id }}-0
           local_interface: "{{ tunnel_if_1 }}"
           local_interface_ip: "{{ parsed.aws_vpn[0].tunnel_if_1_ip }}"
           peer_address_ip: "{{ parsed.aws_vpn[0].peer_1_inside_ip }}"
-        - name: "amazon-{{ vpn_id }}-1"
+        - name: amazon-{{ vpn_id }}-1
           local_interface: "{{ tunnel_if_2 }}"
           local_interface_ip: "{{ parsed.aws_vpn[0].tunnel_if_2_ip }}"
           peer_address_ip: "{{ parsed.aws_vpn[0].peer_2_inside_ip }}"
@@ -240,9 +240,9 @@
         name: "{{ project_name }}"
         priority: "{{ bgp_redist_priority }}"
         vr_name: "{{ vr_name }}"
-        filter_type: "connect"
+        filter_type: connect
         filter_interface: "{{ inside_interface }}"
-        action: "redist"
+        action: redist
         commit: false
 
     - name: Add BGP redistribution
@@ -255,14 +255,14 @@
     - name: Create firewall rule
       paloaltonetworks.panos.panos_security_rule:
         provider: "{{ device }}"
-        rule_name: "Access to AWS"
+        rule_name: Access to AWS
         source_zone: ["{{ inside_zone_name }}"]
         destination_zone: ["{{ vpn_zone_name }}"]
-        source_ip: ["any"]
-        destination_ip: ["any"]
-        application: ["ping", "ssh"]
-        service: "application-default"
-        action: "allow"
+        source_ip: [any]
+        destination_ip: [any]
+        application: [ping, ssh]
+        service: application-default
+        action: allow
         log_start: true
         log_end: true
 
