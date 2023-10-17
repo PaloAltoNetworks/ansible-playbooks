@@ -1,0 +1,16 @@
+---
+- name: Playbook
+  hosts: '{{ target | default("all") }}'
+  gather_facts: false
+
+  vars:
+    sleep_timer: 1 # Units are seconds
+    ping_count: 1  # Number of pings to attempt
+
+  tasks:
+
+    - name: Wait/sleep if needed
+      ansible.builtin.command: sleep {{ sleep_timer }}
+
+    - name: Ping across VPN to AWS - shell
+      ansible.builtin.command: ping 172.31.100.158 -c {{ ping_count }}
