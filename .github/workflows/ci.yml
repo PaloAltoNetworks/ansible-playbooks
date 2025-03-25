@@ -10,10 +10,10 @@ jobs:
 
     steps:
       - name: Check out source
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: Set up Python
-        uses: actions/setup-python@v4.6.1
+        uses: actions/setup-python@bd6b4b6205c4dbad673328db7b31b7fab9e241c0 # v4.6.1
 
       - name: Install pipenv
         run: |
@@ -21,7 +21,7 @@ jobs:
 
       - name: Check pipenv cache
         id: cache-pipenv
-        uses: actions/cache@v3
+        uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f # v3
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-v3-${{ hashFiles('**/Pipfile.lock') }}
